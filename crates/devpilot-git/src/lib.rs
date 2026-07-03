@@ -1,7 +1,7 @@
 //! # devpilot-git
 //!
 //! Git adapter for DevPilot. Implements the git-reading ports from
-//! [`devpilot-core`] on top of libgit2 (the `git2` crate).
+//! `devpilot-core` on top of libgit2 (the `git2` crate).
 //!
 //! Planned contents (added with roadmap phase 2):
 //!

@@ -1,7 +1,7 @@
 //! # devpilot-ai
 //!
 //! LLM provider adapters for DevPilot. Implements the `LlmProvider` port from
-//! [`devpilot-core`] for four interchangeable backends:
+//! `devpilot-core` for four interchangeable backends:
 //! Ollama (local, the reference adapter), Claude, OpenAI, and Gemini.
 //!
 //! Planned contents (added with roadmap phase 4):

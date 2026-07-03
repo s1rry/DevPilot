@@ -1,7 +1,7 @@
 //! # devpilot-analysis
 //!
 //! Code analysis adapter for DevPilot. Implements the analysis ports from
-//! [`devpilot-core`] using tree-sitter.
+//! `devpilot-core` using tree-sitter.
 //!
 //! Planned contents (added with roadmap phase 2):
 //!

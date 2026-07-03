@@ -1,7 +1,7 @@
 //! # devpilot-storage
 //!
 //! Local persistence adapter for DevPilot. Implements the cache and settings
-//! ports from [`devpilot-core`] on top of SQLite (`rusqlite`).
+//! ports from `devpilot-core` on top of SQLite (`rusqlite`).
 //!
 //! Planned contents (added with roadmap phases 2-3):
 //!
