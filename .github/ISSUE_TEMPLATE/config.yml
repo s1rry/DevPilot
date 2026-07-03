@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question / discussion
+    url: https://github.com/s1rry/devpilot/discussions
+    about: Ask questions and discuss ideas in Discussions.

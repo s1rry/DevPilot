@@ -1,0 +1,11 @@
+[package]
+name = "devpilot-git"
+description = "Git adapter: repository reading, file trees, history, authorship and churn."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+devpilot-core = { path = "../devpilot-core" }

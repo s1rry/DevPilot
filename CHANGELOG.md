@@ -1,0 +1,20 @@
+# Changelog
+
+All notable changes to DevPilot are documented in this file.
+
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
+(the first working repository analysis will be `0.1`).
+
+## [0.0.1] - 2026-07-03
+
+### Added
+
+- Project skeleton: Cargo workspace with six crates (`devpilot-core`,
+  `devpilot-analysis`, `devpilot-git`, `devpilot-ai`, `devpilot-storage`,
+  `devpilot-testing`) following Clean Architecture (ADR-0001).
+- Tauri 2 desktop shell with React 18, TypeScript (strict), TailwindCSS 4
+  and Vite; verified builds on macOS.
+- App icons, MIT license, contributor guide, architecture docs and ADR log.
+- CI: format, lint and tests for Rust on Linux/macOS/Windows; frontend
+  type-check and build.

@@ -1,0 +1,10 @@
+[package]
+name = "devpilot-core"
+description = "DevPilot domain: entities, ports (traits) and use cases. Depends on nothing heavy."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]

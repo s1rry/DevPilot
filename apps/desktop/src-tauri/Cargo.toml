@@ -1,0 +1,16 @@
+[package]
+name = "devpilot-desktop"
+description = "DevPilot desktop shell: Tauri composition root. No business logic lives here."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

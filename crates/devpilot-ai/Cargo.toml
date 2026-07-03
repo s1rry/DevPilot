@@ -1,0 +1,11 @@
+[package]
+name = "devpilot-ai"
+description = "LLM provider adapters: Ollama, Claude, OpenAI, Gemini behind one core trait."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+devpilot-core = { path = "../devpilot-core" }
