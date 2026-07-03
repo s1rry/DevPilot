@@ -1,14 +1,47 @@
 @import "tailwindcss";
 
-/* Design tokens. All colors in the app reference these variables,
-   so theming stays in one place. */
-:root {
-  --color-bg: #0b0f1a;
-  --color-surface: #111827;
-  --color-border: #1f2937;
-  --color-text: #e5e7eb;
-  --color-text-muted: #9ca3af;
-  --color-accent: #6366f1;
+/*
+ * Theme tokens.
+ *
+ * Semantic colors are exposed to Tailwind through `@theme`, but their values
+ * are runtime CSS variables (`--canvas`, `--surface`, ...). Switching the
+ * `data-theme` attribute on <html> swaps those variables, so every utility
+ * such as `bg-surface` or `text-muted` re-themes instantly without a rebuild.
+ */
+@theme {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+}
+
+/* Dark theme — the default. */
+:root,
+:root[data-theme="dark"] {
+  --canvas: #0b0f1a;
+  --surface: #111827;
+  --elevated: #1c2536;
+  --border: #1f2937;
+  --fg: #e5e7eb;
+  --muted: #9ca3af;
+  --accent: #6366f1;
+  --accent-fg: #ffffff;
+}
+
+/* Light theme. */
+:root[data-theme="light"] {
+  --canvas: #f8fafc;
+  --surface: #ffffff;
+  --elevated: #f1f5f9;
+  --border: #e2e8f0;
+  --fg: #0f172a;
+  --muted: #64748b;
+  --accent: #6366f1;
+  --accent-fg: #ffffff;
 }
 
 html,
@@ -19,8 +52,8 @@ body,
 
 body {
   margin: 0;
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--canvas);
+  color: var(--fg);
   font-family:
     ui-sans-serif,
     system-ui,
@@ -30,4 +63,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   user-select: none;
+}
+
+/* Colors animate on theme switch for a calm transition. */
+body,
+[data-theme] * {
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
