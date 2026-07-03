@@ -5,6 +5,9 @@ target/
 node_modules/
 dist/
 
+# TypeScript incremental build info
+*.tsbuildinfo
+
 # Editors & OS
 .DS_Store
 .idea/
