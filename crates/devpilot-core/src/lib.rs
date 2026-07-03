@@ -3,16 +3,20 @@
 //! The domain heart of DevPilot. This crate defines *what* the application
 //! does, independent of *how* it is done.
 //!
-//! It will contain (added incrementally, see the roadmap):
+//! - [`entities`] — domain types: repositories, file trees, metrics, history,
+//!   analysis results.
+//! - [`ports`] — traits implemented by adapter crates: git reading, code
+//!   analysis, caching, progress reporting.
+//! - [`errors`] — typed errors, one enum per port.
 //!
-//! - `entities` — domain types: repository, file tree, metrics, insights.
-//! - `ports` — traits implemented by adapter crates: code analysis,
-//!   git reading, LLM providers, caching.
-//! - `usecases` — application logic orchestrating the ports.
-//! - `errors` — typed domain errors.
+//! Use cases orchestrating the ports arrive with the next roadmap step.
 //!
 //! ## Architecture rules (enforced in review and by the compiler)
 //!
 //! - No dependency on Tauri, tree-sitter, git2, HTTP clients or provider SDKs.
 //! - Adapter crates depend on this crate, never the other way around.
-//! - See ADR-0001 (`docs/adr/0001-clean-architecture-workspace.md`).
+//! - See ADR-0001 and ADR-0002 in `docs/adr/`.
+
+pub mod entities;
+pub mod errors;
+pub mod ports;

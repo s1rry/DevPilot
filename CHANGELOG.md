@@ -6,6 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
 (the first working repository analysis will be `0.1`).
 
+## [0.0.2] - 2026-07-03
+
+### Added
+
+- `devpilot-core`: domain entities (repository, file tree, languages,
+  metrics, history, analysis results and progress), four ports
+  (`GitReader`, `CodeAnalyzer`, `AnalysisCache`, `ProgressReporter`) and
+  typed errors per port (ADR-0002).
+- `devpilot-testing`: hand-written configurable mocks for all four ports,
+  consistent repository fixtures, and behavior tests for the mocks.
+
 ## [0.0.1] - 2026-07-03
 
 ### Added
