@@ -20,6 +20,23 @@ Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
   - New `RepositoryView` feature slice with its own Zustand store; all
     backend access flows through the typed `lib/ipc` layer.
 
+## [0.1.0] - 2026-07-04
+
+First milestone: DevPilot can analyze a repository end to end.
+
+### Added
+
+- Repository Scanner (no AI): scan a project folder and get a full report.
+  - New `devpilot-scan` crate: pure manifest detectors (npm, Cargo, PyPI,
+    Go) split from a filesystem adapter (`FsProjectScanner`).
+  - Detects languages (from the file tree), frameworks and dependencies
+    (from manifests), folder structure, and git information (branch,
+    commit count, last commit, top contributors).
+  - New `ProjectScanner` port and `ScanRepository` use case in the core.
+  - `scan_folder` Tauri command wired through DI; typed `lib/ipc/scan.ts`.
+  - Analysis view: overview cards, language bars, framework chips,
+    dependency list, structure and git panels.
+
 ## [0.0.5] - 2026-07-04
 
 ### Added

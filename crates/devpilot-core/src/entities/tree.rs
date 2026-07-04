@@ -55,6 +55,20 @@ impl FileNode {
         }
     }
 
+    /// Number of directories in this subtree, excluding this node itself.
+    fn descendant_directory_count(&self) -> usize {
+        match self {
+            Self::File { .. } => 0,
+            Self::Directory { children, .. } => children
+                .iter()
+                .map(|child| match child {
+                    Self::Directory { .. } => 1 + child.descendant_directory_count(),
+                    Self::File { .. } => 0,
+                })
+                .sum(),
+        }
+    }
+
     /// Accumulates a per-language file count over this subtree into `counts`.
     fn accumulate_language_counts(&self, counts: &mut BTreeMap<Language, usize>) {
         match self {
@@ -93,6 +107,11 @@ impl FileTree {
         let mut counts = BTreeMap::new();
         self.root.accumulate_language_counts(&mut counts);
         counts
+    }
+
+    /// Total number of directories in the tree, excluding the root.
+    pub fn directory_count(&self) -> usize {
+        self.root.descendant_directory_count()
     }
 }
 

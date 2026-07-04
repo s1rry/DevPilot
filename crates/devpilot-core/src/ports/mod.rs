@@ -10,9 +10,11 @@ mod cache;
 mod git;
 mod progress;
 mod recent;
+mod scanner;
 
 pub use analyzer::CodeAnalyzer;
 pub use cache::AnalysisCache;
 pub use git::GitReader;
 pub use progress::ProgressReporter;
 pub use recent::RecentProjectsStore;
+pub use scanner::ProjectScanner;
