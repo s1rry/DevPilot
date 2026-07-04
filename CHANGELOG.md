@@ -6,6 +6,24 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
 (the first working repository analysis will be `0.1`).
 
+## [0.0.4] - 2026-07-03
+
+### Added
+
+- Repository Manager backend (no UI, no AI):
+  - `devpilot-git`: libgit2-backed `GitReader` — open a local repository,
+    clone a remote one, read the file tree, history, per-file churn, file
+    contents, current branch and commit count. Blocking git work runs off
+    the async runtime.
+  - `devpilot-core`: `ProjectMetadata` and `RecentProject` entities, a
+    `RecentProjectsStore` port, and use cases `OpenProject`,
+    `ListRecentProjects`, `RemoveRecentProject`. File tree gains size and
+    per-language counting.
+  - `devpilot-storage`: `JsonRecentProjectsStore` — a capped, atomically
+    written JSON list in the app data directory.
+  - `devpilot-testing`: `MockRecentProjectsStore` plus use-case and adapter
+    tests (git on real temp repositories, storage on real files).
+
 ## [0.0.3] - 2026-07-03
 
 ### Added

@@ -28,6 +28,7 @@ pub struct MockGitReader {
     tree_result: Result<FileTree, GitError>,
     history_result: Result<Vec<CommitInfo>, GitError>,
     churn_result: Result<Vec<FileChurn>, GitError>,
+    branch_result: Result<String, GitError>,
     files: HashMap<PathBuf, String>,
     calls: Mutex<Vec<String>>,
 }
@@ -40,9 +41,16 @@ impl MockGitReader {
             tree_result: Ok(fixtures::sample_tree()),
             history_result: Ok(fixtures::sample_history()),
             churn_result: Ok(vec![]),
+            branch_result: Ok("main".to_string()),
             files: fixtures::sample_files(),
             calls: Mutex::new(Vec::new()),
         }
+    }
+
+    /// Makes [`GitReader::current_branch`] return the given branch name.
+    pub fn with_branch(mut self, branch: impl Into<String>) -> Self {
+        self.branch_result = Ok(branch.into());
+        self
     }
 
     /// Makes [`GitReader::open`] return the given repository.
@@ -149,5 +157,15 @@ impl GitReader for MockGitReader {
             .ok_or_else(|| GitError::FileNotFound {
                 path: path.to_path_buf(),
             })
+    }
+
+    async fn current_branch(&self, _repository: &Repository) -> Result<String, GitError> {
+        self.record("current_branch");
+        self.branch_result.clone()
+    }
+
+    async fn commit_count(&self, _repository: &Repository) -> Result<usize, GitError> {
+        self.record("commit_count");
+        self.history_result.clone().map(|commits| commits.len())
     }
 }

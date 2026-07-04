@@ -34,4 +34,15 @@ pub trait GitReader: Send + Sync {
 
     /// Reads the text content of one file at HEAD.
     async fn read_file(&self, repository: &Repository, path: &Path) -> Result<String, GitError>;
+
+    /// Returns the short name of the branch HEAD points to.
+    ///
+    /// Falls back to a detached-HEAD marker when HEAD is not on a branch.
+    async fn current_branch(&self, repository: &Repository) -> Result<String, GitError>;
+
+    /// Counts all commits reachable from HEAD.
+    ///
+    /// Cheaper than materializing the full [`history`](GitReader::history)
+    /// when only the total is needed.
+    async fn commit_count(&self, repository: &Repository) -> Result<usize, GitError>;
 }

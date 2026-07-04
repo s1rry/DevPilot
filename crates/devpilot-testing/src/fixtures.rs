@@ -9,7 +9,8 @@ use std::path::PathBuf;
 
 use devpilot_core::entities::{
     AnalysisResult, CommitHash, CommitInfo, FileAnalysis, FileMetrics, FileNode, FileTree,
-    FunctionMetrics, Language, Repository, RepositoryId, SourceFile,
+    FunctionMetrics, Language, RecentProject, Repository, RepositoryId, RepositorySource,
+    SourceFile,
 };
 
 /// Commit hash the sample repository is pinned at.
@@ -24,6 +25,22 @@ pub fn sample_repository() -> Repository {
         name: "sample".to_string(),
         local_path: PathBuf::from("/tmp/fixture-sample"),
         head: sample_commit(),
+    }
+}
+
+/// The local source matching [`sample_repository`].
+pub fn sample_local_source() -> RepositorySource {
+    RepositorySource::LocalPath(PathBuf::from("/tmp/fixture-sample"))
+}
+
+/// A recent-projects entry matching [`sample_repository`].
+pub fn sample_recent_project() -> RecentProject {
+    RecentProject {
+        id: RepositoryId::new("fixture/sample"),
+        name: "sample".to_string(),
+        source: sample_local_source(),
+        local_path: PathBuf::from("/tmp/fixture-sample"),
+        last_opened: 1_750_000_000,
     }
 }
 

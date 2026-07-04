@@ -7,7 +7,9 @@
 mod analysis;
 mod history;
 mod language;
+mod metadata;
 mod metrics;
+mod project;
 mod repository;
 mod tree;
 
@@ -16,6 +18,8 @@ pub use analysis::{
 };
 pub use history::{AuthorStats, CommitHash, CommitInfo, FileChurn};
 pub use language::Language;
+pub use metadata::{LanguageStat, ProjectMetadata};
 pub use metrics::{FileMetrics, FunctionMetrics};
+pub use project::RecentProject;
 pub use repository::{Repository, RepositoryId, RepositorySource};
 pub use tree::{FileNode, FileTree};

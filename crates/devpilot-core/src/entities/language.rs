@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 /// The initial set matches the languages DevPilot ships analysis grammars
 /// for. Files in other languages are `Unknown`: they still receive
 /// line-based metrics, but no AST metrics.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum Language {
     /// Rust (`.rs`).
     Rust,
