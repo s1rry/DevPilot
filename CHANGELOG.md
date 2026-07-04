@@ -20,6 +20,22 @@ Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
   - New `RepositoryView` feature slice with its own Zustand store; all
     backend access flows through the typed `lib/ipc` layer.
 
+## [0.1.4] - 2026-07-04
+
+### Added
+
+- AI Chat backend (sub-step; no UI yet):
+  - `ChatWithRepository` use case: gathers repository context (summary plus
+    files relevant to the question), fits it and the conversation into an
+    approximate token budget, and streams the selected provider's reply.
+  - Pure context builder in `devpilot-core::chat` (relevance selection,
+    system prompt, budget-aware trimming) with tests.
+  - AI settings: `AiSettings`/`ProviderKind` entities, `SettingsStore` port,
+    `JsonSettingsStore` (API keys in a JSON file), `MockSettingsStore`.
+  - `build_provider` factory in `devpilot-ai`.
+  - Tauri commands wired via DI: `chat` (streams tokens through an IPC
+    `Channel`), `get_ai_settings`, `set_ai_settings`.
+
 ## [0.1.3] - 2026-07-04
 
 ### Added

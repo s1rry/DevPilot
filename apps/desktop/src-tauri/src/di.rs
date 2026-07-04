@@ -7,7 +7,7 @@ use std::sync::Arc;
 use devpilot_analysis::TreeSitterAnalyzer;
 use devpilot_git::Git2Reader;
 use devpilot_scan::FsProjectScanner;
-use devpilot_storage::JsonRecentProjectsStore;
+use devpilot_storage::{JsonRecentProjectsStore, JsonSettingsStore};
 use tauri::{AppHandle, Manager};
 
 use crate::state::AppState;
@@ -29,11 +29,13 @@ pub fn build_state(app: &AppHandle) -> Result<AppState, String> {
     ));
     let scanner = Arc::new(FsProjectScanner::new());
     let analyzer = Arc::new(TreeSitterAnalyzer::new());
+    let settings = Arc::new(JsonSettingsStore::new(data_dir.join("ai-settings.json")));
 
     Ok(AppState {
         git,
         recent,
         scanner,
         analyzer,
+        settings,
     })
 }

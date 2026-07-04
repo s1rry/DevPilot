@@ -22,7 +22,26 @@ mod gemini;
 mod ollama;
 mod openai;
 
+use std::sync::Arc;
+
+use devpilot_core::entities::{AiSettings, ProviderKind};
+use devpilot_core::ports::LlmProvider;
+
 pub use claude::ClaudeProvider;
 pub use gemini::GeminiProvider;
 pub use ollama::OllamaProvider;
 pub use openai::OpenAiProvider;
+
+/// Builds the provider selected in `settings`, using its configured API key.
+///
+/// This is the single place that maps a [`ProviderKind`] to a concrete
+/// adapter, so wiring code stays free of provider `match`es.
+pub fn build_provider(settings: &AiSettings) -> Arc<dyn LlmProvider> {
+    let key = settings.active_key().unwrap_or_default().to_string();
+    match settings.provider {
+        ProviderKind::Ollama => Arc::new(OllamaProvider::new()),
+        ProviderKind::Claude => Arc::new(ClaudeProvider::new(key)),
+        ProviderKind::OpenAI => Arc::new(OpenAiProvider::new(key)),
+        ProviderKind::Gemini => Arc::new(GeminiProvider::new(key)),
+    }
+}

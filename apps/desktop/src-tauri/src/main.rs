@@ -33,6 +33,9 @@ fn main() {
             commands::parse_file,
             commands::analyze_architecture,
             commands::export_architecture,
+            commands::get_ai_settings,
+            commands::set_ai_settings,
+            commands::chat,
         ])
         .run(tauri::generate_context!())
         .expect("failed to start DevPilot");
