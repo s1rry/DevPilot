@@ -17,6 +17,7 @@
 //! - Adapter crates depend on this crate, never the other way around.
 //! - See ADR-0001 and ADR-0002 in `docs/adr/`.
 
+pub mod architecture;
 pub mod entities;
 pub mod errors;
 pub mod ports;

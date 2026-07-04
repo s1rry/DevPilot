@@ -15,6 +15,10 @@ pub struct FunctionDef {
     pub end_line: usize,
     /// Whether the function is declared `async`.
     pub is_async: bool,
+    /// Names of functions called directly in this function's body, in source
+    /// order (used to build the call graph). Callees are recorded by name;
+    /// there is no semantic resolution.
+    pub calls: Vec<String>,
 }
 
 /// A class or, by analogy, a Rust struct/enum.

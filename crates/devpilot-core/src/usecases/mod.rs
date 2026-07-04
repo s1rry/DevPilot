@@ -5,10 +5,12 @@
 //! application's behavior and are fully testable against the mocks in
 //! `devpilot-testing`.
 
+mod analyze_architecture;
 mod open_project;
 mod recent_projects;
 mod scan_repository;
 
+pub use analyze_architecture::AnalyzeArchitecture;
 pub use open_project::OpenProject;
 pub use recent_projects::{ListRecentProjects, RemoveRecentProject};
 pub use scan_repository::ScanRepository;

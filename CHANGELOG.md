@@ -20,6 +20,24 @@ Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
   - New `RepositoryView` feature slice with its own Zustand store; all
     backend access flows through the typed `lib/ipc` layer.
 
+## [0.1.2] - 2026-07-04
+
+### Added
+
+- Architecture Engine (no AI): builds four graphs from AST data and exports
+  them as JSON.
+  - `ArchitectureModel` in core with a generic `Graph` (typed nodes/edges):
+    **folder** (directory containment), **dependency** (file imports),
+    **module** (directory-level dependencies) and **call** (function calls).
+  - Pure, deterministic builders in `devpilot-core::architecture`. Import and
+    call resolution are name-based heuristics, documented as such.
+  - `AnalyzeArchitecture` use case: parses every supported file in a
+    repository and builds the model; unreadable/unparsable files are skipped.
+  - AST analyzer now captures per-function call sites (`FunctionDef.calls`)
+    for Rust and TypeScript/JavaScript.
+  - `analyze_architecture` and `export_architecture` (writes JSON to disk)
+    Tauri commands via DI; typed `lib/ipc/architecture.ts`.
+
 ## [0.1.1] - 2026-07-04
 
 ### Added

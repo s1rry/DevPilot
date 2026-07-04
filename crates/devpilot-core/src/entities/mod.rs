@@ -6,6 +6,7 @@
 
 mod analysis;
 mod ast;
+mod graph;
 mod history;
 mod language;
 mod metadata;
@@ -19,6 +20,7 @@ pub use analysis::{
     AnalysisProgress, AnalysisResult, Diagnostic, DiagnosticSeverity, FileAnalysis, SourceFile,
 };
 pub use ast::{ClassDef, ExportDecl, ExportKind, FileAst, FunctionDef, ImportDecl, InterfaceDef};
+pub use graph::{ArchitectureModel, EdgeKind, Graph, GraphEdge, GraphNode, NodeKind};
 pub use history::{AuthorStats, CommitHash, CommitInfo, FileChurn};
 pub use language::Language;
 pub use metadata::{LanguageStat, ProjectMetadata};

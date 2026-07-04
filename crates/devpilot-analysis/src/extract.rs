@@ -103,6 +103,39 @@ fn rust_is_async(node: Node, src: &[u8]) -> bool {
         .any(|child| child.kind() == "function_modifiers" && text(*child, src).contains("async"))
 }
 
+/// Collects callee names of `call_expression`s in a Rust function body, in
+/// source order, without descending into nested functions or closures.
+fn rust_collect_calls(node: Node, src: &[u8], out: &mut Vec<String>) {
+    for child in named_children(node) {
+        if matches!(child.kind(), "function_item" | "closure_expression") {
+            continue;
+        }
+        if child.kind() == "call_expression" {
+            if let Some(name) = rust_callee_name(child, src) {
+                out.push(name);
+            }
+        }
+        rust_collect_calls(child, src, out);
+    }
+}
+
+/// Extracts the callee name from a Rust `call_expression`.
+fn rust_callee_name(call: Node, src: &[u8]) -> Option<String> {
+    let function = call.child_by_field_name("function")?;
+    match function.kind() {
+        "identifier" | "field_identifier" | "type_identifier" => {
+            Some(text(function, src).to_string())
+        }
+        "scoped_identifier" => function
+            .child_by_field_name("name")
+            .map(|name| text(name, src).to_string()),
+        "field_expression" => function
+            .child_by_field_name("field")
+            .map(|field| text(field, src).to_string()),
+        _ => None,
+    }
+}
+
 /// Records an export for a `pub` Rust item.
 fn rust_export(node: Node, src: &[u8], kind: ExportKind, ast: &mut FileAst) {
     if has_child_kind(node, "visibility_modifier") {
@@ -121,11 +154,14 @@ fn rust_visit(node: Node, src: &[u8], ast: &mut FileAst, impls: &HashMap<String,
     match node.kind() {
         "function_item" => {
             if let Some(name) = name_of(node, src) {
+                let mut calls = Vec::new();
+                rust_collect_calls(node, src, &mut calls);
                 ast.functions.push(FunctionDef {
                     name,
                     start_line: start_line(node),
                     end_line: end_line(node),
                     is_async: rust_is_async(node, src),
+                    calls,
                 });
             }
             rust_export(node, src, ExportKind::Function, ast);
@@ -194,6 +230,42 @@ fn ecma_is_async(node: Node) -> bool {
     })
 }
 
+/// Collects callee names of `call_expression`s in an EcmaScript function
+/// body, in source order, without descending into nested functions.
+fn ecma_collect_calls(node: Node, src: &[u8], out: &mut Vec<String>) {
+    for child in named_children(node) {
+        if matches!(
+            child.kind(),
+            "function_declaration"
+                | "generator_function_declaration"
+                | "function"
+                | "function_expression"
+                | "arrow_function"
+                | "method_definition"
+        ) {
+            continue;
+        }
+        if child.kind() == "call_expression" {
+            if let Some(name) = ecma_callee_name(child, src) {
+                out.push(name);
+            }
+        }
+        ecma_collect_calls(child, src, out);
+    }
+}
+
+/// Extracts the callee name from an EcmaScript `call_expression`.
+fn ecma_callee_name(call: Node, src: &[u8]) -> Option<String> {
+    let function = call.child_by_field_name("function")?;
+    match function.kind() {
+        "identifier" => Some(text(function, src).to_string()),
+        "member_expression" => function
+            .child_by_field_name("property")
+            .map(|property| text(property, src).to_string()),
+        _ => None,
+    }
+}
+
 /// Collects the method names of a class body.
 fn class_methods(class_node: Node, src: &[u8]) -> Vec<String> {
     let Some(body) = class_node.child_by_field_name("body") else {
@@ -221,11 +293,14 @@ fn ecma_bound_functions(node: Node, src: &[u8], ast: &mut FileAst) {
             "arrow_function" | "function" | "function_expression"
         ) {
             if let Some(name) = name_of(declarator, src) {
+                let mut calls = Vec::new();
+                ecma_collect_calls(value, src, &mut calls);
                 ast.functions.push(FunctionDef {
                     name,
                     start_line: start_line(declarator),
                     end_line: end_line(value),
                     is_async: ecma_is_async(value),
+                    calls,
                 });
             }
         }
@@ -322,11 +397,14 @@ fn ecma_visit(node: Node, src: &[u8], ast: &mut FileAst) {
     match node.kind() {
         "function_declaration" | "generator_function_declaration" => {
             if let Some(name) = name_of(node, src) {
+                let mut calls = Vec::new();
+                ecma_collect_calls(node, src, &mut calls);
                 ast.functions.push(FunctionDef {
                     name,
                     start_line: start_line(node),
                     end_line: end_line(node),
                     is_async: ecma_is_async(node),
+                    calls,
                 });
             }
         }
