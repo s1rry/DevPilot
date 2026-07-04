@@ -8,9 +8,9 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 
 use devpilot_core::entities::{
-    AnalysisResult, CommitHash, CommitInfo, FileAnalysis, FileMetrics, FileNode, FileTree,
-    FunctionMetrics, Language, RecentProject, Repository, RepositoryId, RepositorySource,
-    SourceFile,
+    AnalysisResult, CommitHash, CommitInfo, FileAnalysis, FileAst, FileMetrics, FileNode, FileTree,
+    FunctionDef, FunctionMetrics, Language, RecentProject, Repository, RepositoryId,
+    RepositorySource, SourceFile,
 };
 
 /// Commit hash the sample repository is pinned at.
@@ -116,6 +116,24 @@ pub fn sample_source_file() -> SourceFile {
     SourceFile {
         path: PathBuf::from("src/main.rs"),
         content: sample_files()[&PathBuf::from("src/main.rs")].clone(),
+    }
+}
+
+/// A plausible AST model of one Rust file at `path`.
+pub fn sample_file_ast(path: &str) -> FileAst {
+    FileAst {
+        path: PathBuf::from(path),
+        language: Language::Rust,
+        functions: vec![FunctionDef {
+            name: "add".to_string(),
+            start_line: 2,
+            end_line: 4,
+            is_async: false,
+        }],
+        classes: vec![],
+        interfaces: vec![],
+        imports: vec![],
+        exports: vec![],
     }
 }
 

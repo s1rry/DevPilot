@@ -15,7 +15,9 @@ tauri = { version = "2", features = [] }
 tauri-plugin-dialog = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+tokio = { workspace = true }
 devpilot-core = { path = "../../../crates/devpilot-core" }
+devpilot-analysis = { path = "../../../crates/devpilot-analysis" }
 devpilot-git = { path = "../../../crates/devpilot-git" }
 devpilot-scan = { path = "../../../crates/devpilot-scan" }
 devpilot-storage = { path = "../../../crates/devpilot-storage" }

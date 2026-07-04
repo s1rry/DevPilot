@@ -66,16 +66,16 @@ async fn git_reader_reports_missing_files() {
 }
 
 #[tokio::test]
-async fn analyzer_returns_configured_analysis_and_records_calls() {
-    let analysis = fixtures::sample_file_analysis("src/lib.rs");
-    let analyzer = MockCodeAnalyzer::new().with_analysis(analysis.clone());
+async fn analyzer_returns_configured_ast_and_records_calls() {
+    let ast = fixtures::sample_file_ast("src/lib.rs");
+    let analyzer = MockCodeAnalyzer::new().with_ast(ast.clone());
 
     let mut file = fixtures::sample_source_file();
     file.path = PathBuf::from("src/lib.rs");
 
-    let produced = analyzer.analyze_file(&file).await.expect("analysis");
-    assert_eq!(produced, analysis);
-    assert_eq!(analyzer.analyzed_paths(), vec![PathBuf::from("src/lib.rs")]);
+    let produced = analyzer.parse(&file).await.expect("ast");
+    assert_eq!(produced, ast);
+    assert_eq!(analyzer.parsed_paths(), vec![PathBuf::from("src/lib.rs")]);
 }
 
 #[tokio::test]
@@ -83,7 +83,7 @@ async fn analyzer_fails_unconfigured_files_as_unsupported() {
     let analyzer = MockCodeAnalyzer::new();
     let file = fixtures::sample_source_file();
 
-    let result = analyzer.analyze_file(&file).await;
+    let result = analyzer.parse(&file).await;
     assert_eq!(
         result,
         Err(AnalysisError::UnsupportedLanguage {

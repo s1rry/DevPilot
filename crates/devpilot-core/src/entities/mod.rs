@@ -5,6 +5,7 @@
 //! (ADR-0002), but contain no I/O and no framework types.
 
 mod analysis;
+mod ast;
 mod history;
 mod language;
 mod metadata;
@@ -17,6 +18,7 @@ mod tree;
 pub use analysis::{
     AnalysisProgress, AnalysisResult, Diagnostic, DiagnosticSeverity, FileAnalysis, SourceFile,
 };
+pub use ast::{ClassDef, ExportDecl, ExportKind, FileAst, FunctionDef, ImportDecl, InterfaceDef};
 pub use history::{AuthorStats, CommitHash, CommitInfo, FileChurn};
 pub use language::Language;
 pub use metadata::{LanguageStat, ProjectMetadata};

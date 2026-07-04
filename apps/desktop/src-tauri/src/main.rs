@@ -30,6 +30,7 @@ fn main() {
             commands::list_recent_projects,
             commands::remove_recent_project,
             commands::scan_folder,
+            commands::parse_file,
         ])
         .run(tauri::generate_context!())
         .expect("failed to start DevPilot");

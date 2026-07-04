@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
 use async_trait::async_trait;
-use devpilot_core::entities::{FileAnalysis, Language, SourceFile};
+use devpilot_core::entities::{FileAst, Language, SourceFile};
 use devpilot_core::errors::AnalysisError;
 use devpilot_core::ports::CodeAnalyzer;
 
@@ -13,8 +13,8 @@ use devpilot_core::ports::CodeAnalyzer;
 /// fail with [`AnalysisError::UnsupportedLanguage`], mirroring how the real
 /// analyzer treats files it has no grammar for.
 pub struct MockCodeAnalyzer {
-    responses: HashMap<PathBuf, Result<FileAnalysis, AnalysisError>>,
-    analyzed: Mutex<Vec<PathBuf>>,
+    responses: HashMap<PathBuf, Result<FileAst, AnalysisError>>,
+    parsed: Mutex<Vec<PathBuf>>,
 }
 
 impl MockCodeAnalyzer {
@@ -22,13 +22,13 @@ impl MockCodeAnalyzer {
     pub fn new() -> Self {
         Self {
             responses: HashMap::new(),
-            analyzed: Mutex::new(Vec::new()),
+            parsed: Mutex::new(Vec::new()),
         }
     }
 
-    /// Configures a successful analysis, keyed by `analysis.path`.
-    pub fn with_analysis(mut self, analysis: FileAnalysis) -> Self {
-        self.responses.insert(analysis.path.clone(), Ok(analysis));
+    /// Configures a successful parse, keyed by `ast.path`.
+    pub fn with_ast(mut self, ast: FileAst) -> Self {
+        self.responses.insert(ast.path.clone(), Ok(ast));
         self
     }
 
@@ -38,9 +38,9 @@ impl MockCodeAnalyzer {
         self
     }
 
-    /// Paths passed to [`CodeAnalyzer::analyze_file`] so far, in order.
-    pub fn analyzed_paths(&self) -> Vec<PathBuf> {
-        self.analyzed.lock().expect("mock mutex poisoned").clone()
+    /// Paths passed to [`CodeAnalyzer::parse`] so far, in order.
+    pub fn parsed_paths(&self) -> Vec<PathBuf> {
+        self.parsed.lock().expect("mock mutex poisoned").clone()
     }
 }
 
@@ -52,8 +52,8 @@ impl Default for MockCodeAnalyzer {
 
 #[async_trait]
 impl CodeAnalyzer for MockCodeAnalyzer {
-    async fn analyze_file(&self, file: &SourceFile) -> Result<FileAnalysis, AnalysisError> {
-        self.analyzed
+    async fn parse(&self, file: &SourceFile) -> Result<FileAst, AnalysisError> {
+        self.parsed
             .lock()
             .expect("mock mutex poisoned")
             .push(file.path.clone());

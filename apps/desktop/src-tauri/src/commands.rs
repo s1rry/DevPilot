@@ -7,7 +7,7 @@
 use std::path::PathBuf;
 
 use devpilot_core::entities::{
-    ProjectMetadata, RecentProject, RepositoryId, RepositorySource, ScanReport,
+    FileAst, ProjectMetadata, RecentProject, RepositoryId, RepositorySource, ScanReport, SourceFile,
 };
 use devpilot_core::usecases::{
     ListRecentProjects, OpenProject, RemoveRecentProject, ScanRepository,
@@ -68,6 +68,22 @@ pub async fn scan_folder(path: String, state: State<'_, AppState>) -> Result<Sca
     let use_case = ScanRepository::new(state.git.clone(), state.scanner.clone());
     use_case
         .execute(RepositorySource::LocalPath(PathBuf::from(path)))
+        .await
+        .map_err(|error| error.to_string())
+}
+
+/// Parses one source file into its AST model (functions, classes,
+/// interfaces, imports, exports).
+#[tauri::command]
+pub async fn parse_file(path: String, state: State<'_, AppState>) -> Result<FileAst, String> {
+    let path = PathBuf::from(path);
+    let content = tokio::fs::read_to_string(&path)
+        .await
+        .map_err(|error| format!("reading {}: {error}", path.display()))?;
+    let file = SourceFile { path, content };
+    state
+        .analyzer
+        .parse(&file)
         .await
         .map_err(|error| error.to_string())
 }
