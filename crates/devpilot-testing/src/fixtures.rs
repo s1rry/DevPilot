@@ -129,6 +129,7 @@ pub fn sample_file_ast(path: &str) -> FileAst {
             start_line: 2,
             end_line: 4,
             is_async: false,
+            calls: vec![],
         }],
         classes: vec![],
         interfaces: vec![],

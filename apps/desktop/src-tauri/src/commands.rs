@@ -7,10 +7,11 @@
 use std::path::PathBuf;
 
 use devpilot_core::entities::{
-    FileAst, ProjectMetadata, RecentProject, RepositoryId, RepositorySource, ScanReport, SourceFile,
+    ArchitectureModel, FileAst, ProjectMetadata, RecentProject, RepositoryId, RepositorySource,
+    ScanReport, SourceFile,
 };
 use devpilot_core::usecases::{
-    ListRecentProjects, OpenProject, RemoveRecentProject, ScanRepository,
+    AnalyzeArchitecture, ListRecentProjects, OpenProject, RemoveRecentProject, ScanRepository,
 };
 use tauri::State;
 
@@ -86,4 +87,39 @@ pub async fn parse_file(path: String, state: State<'_, AppState>) -> Result<File
         .parse(&file)
         .await
         .map_err(|error| error.to_string())
+}
+
+/// Analyzes a project's architecture into the folder, dependency, module and
+/// call graphs.
+#[tauri::command]
+pub async fn analyze_architecture(
+    path: String,
+    state: State<'_, AppState>,
+) -> Result<ArchitectureModel, String> {
+    let use_case = AnalyzeArchitecture::new(state.git.clone(), state.analyzer.clone());
+    use_case
+        .execute(RepositorySource::LocalPath(PathBuf::from(path)))
+        .await
+        .map_err(|error| error.to_string())
+}
+
+/// Analyzes a project's architecture and writes the model to `out_path` as
+/// pretty-printed JSON. Returns the path written.
+#[tauri::command]
+pub async fn export_architecture(
+    path: String,
+    out_path: String,
+    state: State<'_, AppState>,
+) -> Result<String, String> {
+    let use_case = AnalyzeArchitecture::new(state.git.clone(), state.analyzer.clone());
+    let model = use_case
+        .execute(RepositorySource::LocalPath(PathBuf::from(path)))
+        .await
+        .map_err(|error| error.to_string())?;
+    let json =
+        serde_json::to_string_pretty(&model).map_err(|error| format!("serialize: {error}"))?;
+    tokio::fs::write(&out_path, json)
+        .await
+        .map_err(|error| format!("writing {out_path}: {error}"))?;
+    Ok(out_path)
 }

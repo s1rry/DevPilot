@@ -2,18 +2,22 @@
 //! mocks. These live here so `devpilot-core` needs no dev-dependency on
 //! `devpilot-testing`.
 
+use std::path::PathBuf;
 use std::sync::Arc;
 
 use devpilot_core::entities::{
-    Dependency, Detection, Ecosystem, Framework, FrameworkCategory, Language, RepositoryId,
+    Dependency, Detection, Ecosystem, EdgeKind, FileAst, Framework, FrameworkCategory, FunctionDef,
+    ImportDecl, Language, RepositoryId,
 };
 use devpilot_core::errors::{GitError, ProjectError, RepoScanError, ScanError, StoreError};
 use devpilot_core::ports::RecentProjectsStore;
 use devpilot_core::usecases::{
-    ListRecentProjects, OpenProject, RemoveRecentProject, ScanRepository,
+    AnalyzeArchitecture, ListRecentProjects, OpenProject, RemoveRecentProject, ScanRepository,
 };
 use devpilot_testing::fixtures;
-use devpilot_testing::mocks::{MockGitReader, MockProjectScanner, MockRecentProjectsStore};
+use devpilot_testing::mocks::{
+    MockCodeAnalyzer, MockGitReader, MockProjectScanner, MockRecentProjectsStore,
+};
 
 #[tokio::test]
 async fn open_project_builds_metadata_and_records_recent() {
@@ -165,4 +169,65 @@ async fn scan_repository_propagates_scan_error() {
         result,
         Err(RepoScanError::Scan(ScanError::Backend("io".into())))
     );
+}
+
+#[tokio::test]
+async fn analyze_architecture_builds_graphs_from_parsed_files() {
+    // The sample tree has src/lib.rs and src/main.rs (Rust) plus README.md.
+    let git = Arc::new(MockGitReader::new());
+
+    let lib = FileAst {
+        path: PathBuf::from("src/lib.rs"),
+        language: Language::Rust,
+        functions: vec![FunctionDef {
+            name: "a".into(),
+            start_line: 1,
+            end_line: 2,
+            is_async: false,
+            calls: vec!["b".into()],
+        }],
+        imports: vec![ImportDecl {
+            source: "crate::main".into(),
+            line: 1,
+        }],
+        ..FileAst::default()
+    };
+    let main = FileAst {
+        path: PathBuf::from("src/main.rs"),
+        language: Language::Rust,
+        functions: vec![FunctionDef {
+            name: "b".into(),
+            start_line: 1,
+            end_line: 2,
+            is_async: false,
+            calls: vec![],
+        }],
+        ..FileAst::default()
+    };
+    let analyzer = Arc::new(MockCodeAnalyzer::new().with_ast(lib).with_ast(main));
+    let use_case = AnalyzeArchitecture::new(git, analyzer);
+
+    let model = use_case
+        .execute(fixtures::sample_local_source())
+        .await
+        .expect("analyze");
+
+    // Dependency edge lib.rs -> main.rs (import "crate::main" resolves by stem).
+    assert!(model
+        .dependency_graph
+        .edges
+        .iter()
+        .any(|e| e.from == "src/lib.rs" && e.to == "src/main.rs" && e.kind == EdgeKind::Imports));
+
+    // Call edge a -> b across files.
+    assert!(model
+        .call_graph
+        .edges
+        .iter()
+        .any(|e| e.from == "src/lib.rs::a"
+            && e.to == "src/main.rs::b"
+            && e.kind == EdgeKind::Calls));
+
+    // Folder graph contains the src directory.
+    assert!(model.folder_graph.nodes.iter().any(|n| n.id == "src"));
 }

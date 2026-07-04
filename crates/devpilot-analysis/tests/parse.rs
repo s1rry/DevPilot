@@ -144,6 +144,36 @@ async fn parses_typescript_symbols() {
 }
 
 #[tokio::test]
+async fn captures_rust_calls_per_function() {
+    let analyzer = TreeSitterAnalyzer::new();
+    let src =
+        "fn helper() {}\nfn run() {\n    helper();\n    Foo::build();\n    value.compute();\n}\n";
+    let ast = analyzer
+        .parse(&source("src/lib.rs", src))
+        .await
+        .expect("parse");
+
+    let run = ast.functions.iter().find(|f| f.name == "run").expect("run");
+    assert!(run.calls.contains(&"helper".to_string()));
+    assert!(run.calls.contains(&"build".to_string()));
+    assert!(run.calls.contains(&"compute".to_string()));
+}
+
+#[tokio::test]
+async fn captures_typescript_calls_per_function() {
+    let analyzer = TreeSitterAnalyzer::new();
+    let src = "function helper() {}\nfunction run() {\n    helper();\n    obj.method();\n}\n";
+    let ast = analyzer
+        .parse(&source("src/app.ts", src))
+        .await
+        .expect("parse");
+
+    let run = ast.functions.iter().find(|f| f.name == "run").expect("run");
+    assert!(run.calls.contains(&"helper".to_string()));
+    assert!(run.calls.contains(&"method".to_string()));
+}
+
+#[tokio::test]
 async fn unsupported_language_is_typed_error() {
     let analyzer = TreeSitterAnalyzer::new();
     let result = analyzer.parse(&source("notes.txt", "hello")).await;
