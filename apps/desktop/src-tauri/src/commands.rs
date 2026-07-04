@@ -49,10 +49,7 @@ pub async fn list_recent_projects(
 
 /// Removes one project from the recent-projects list.
 #[tauri::command]
-pub async fn remove_recent_project(
-    id: String,
-    state: State<'_, AppState>,
-) -> Result<(), String> {
+pub async fn remove_recent_project(id: String, state: State<'_, AppState>) -> Result<(), String> {
     let use_case = RemoveRecentProject::new(state.recent.clone());
     use_case
         .execute(&RepositoryId::new(id))
