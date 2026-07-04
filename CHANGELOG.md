@@ -20,6 +20,21 @@ Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
   - New `RepositoryView` feature slice with its own Zustand store; all
     backend access flows through the typed `lib/ipc` layer.
 
+## [0.2.0] - 2026-07-04
+
+Milestone: you can now chat with your repository.
+
+### Added
+
+- AI Chat UI: a repository-aware conversation with the configured LLM
+  provider.
+  - Streaming replies token by token (Tauri IPC `Channel`), Markdown
+    rendering with syntax-highlighted code blocks, and conversation history.
+  - Choose a project folder to chat about; clear the conversation.
+- Provider settings screen: pick the provider (Ollama, Claude, OpenAI,
+  Gemini) and model, and enter API keys (masked, stored locally).
+- Frontend deps: react-markdown, remark-gfm, rehype-highlight, highlight.js.
+
 ## [0.1.4] - 2026-07-04
 
 ### Added
