@@ -9,6 +9,7 @@ mod ast;
 mod graph;
 mod history;
 mod language;
+mod llm;
 mod metadata;
 mod metrics;
 mod project;
@@ -23,6 +24,7 @@ pub use ast::{ClassDef, ExportDecl, ExportKind, FileAst, FunctionDef, ImportDecl
 pub use graph::{ArchitectureModel, EdgeKind, Graph, GraphEdge, GraphNode, NodeKind};
 pub use history::{AuthorStats, CommitHash, CommitInfo, FileChurn};
 pub use language::Language;
+pub use llm::{ChatMessage, ChatRequest, ModelInfo, Role};
 pub use metadata::{LanguageStat, ProjectMetadata};
 pub use metrics::{FileMetrics, FunctionMetrics};
 pub use project::RecentProject;

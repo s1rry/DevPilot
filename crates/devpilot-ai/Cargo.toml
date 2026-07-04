@@ -9,3 +9,16 @@ authors.workspace = true
 
 [dependencies]
 devpilot-core = { path = "../devpilot-core" }
+async-stream = { workspace = true }
+async-trait = { workspace = true }
+bytes = { workspace = true }
+futures-core = { workspace = true }
+futures-util = { workspace = true }
+reqwest = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true }
+futures-util = { workspace = true }
+wiremock = { workspace = true }

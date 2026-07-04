@@ -20,7 +20,22 @@ Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
   - New `RepositoryView` feature slice with its own Zustand store; all
     backend access flows through the typed `lib/ipc` layer.
 
-## [0.1.2] - 2026-07-04
+## [0.1.3] - 2026-07-04
+
+### Added
+
+- LLM provider abstraction (no business logic): one `LlmProvider` port, four
+  adapters.
+  - `LlmProvider` trait in core with provider-neutral `ChatRequest`/
+    `ChatMessage`/`ModelInfo`, token streaming (`TokenStream`) and a typed
+    `LlmError` (auth, rate limit, context length, network).
+  - `devpilot-ai` adapters over raw `reqwest` (rustls TLS), no SDKs:
+    `OllamaProvider` (local, no key — the reference), `ClaudeProvider`,
+    `OpenAiProvider`, `GeminiProvider`. API keys are redacted from `Debug`.
+  - `MockLlmProvider` in `devpilot-testing`; wiremock adapter tests covering
+    SSE and NDJSON streaming, model listing and error mapping.
+
+
 
 ### Added
 

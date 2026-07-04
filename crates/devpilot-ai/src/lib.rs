@@ -1,17 +1,28 @@
 //! # devpilot-ai
 //!
-//! LLM provider adapters for DevPilot. Implements the `LlmProvider` port from
-//! `devpilot-core` for four interchangeable backends:
-//! Ollama (local, the reference adapter), Claude, OpenAI, and Gemini.
+//! LLM provider adapters for DevPilot. Each adapter implements the single
+//! [`LlmProvider`](devpilot_core::ports::LlmProvider) port from
+//! `devpilot-core` over raw HTTP: [`OllamaProvider`] (local, the reference
+//! adapter), [`ClaudeProvider`], [`OpenAiProvider`] and [`GeminiProvider`].
 //!
-//! Planned contents (added with roadmap phase 4):
-//!
-//! - One structurally identical adapter file per provider, over raw HTTP.
-//! - Token streaming for all providers.
-//! - Typed error mapping: auth, rate limits, context overflow, network.
+//! This crate is the abstraction only: it turns provider-neutral requests
+//! into each API's wire format, streams tokens back, and maps errors to the
+//! typed `LlmError`. It holds no business logic — no context building, no
+//! conversation management.
 //!
 //! ## Rules
 //!
-//! - No provider SDKs and no LLM frameworks (ADR-0001).
+//! - No provider SDKs and no LLM frameworks; thin `reqwest` adapters only.
 //! - API keys are never logged and never appear in `Debug` output.
-//! - Ollama must work with zero API keys so contributors can test locally.
+//! - Ollama works with zero API keys so contributors and CI can test locally.
+
+mod claude;
+mod common;
+mod gemini;
+mod ollama;
+mod openai;
+
+pub use claude::ClaudeProvider;
+pub use gemini::GeminiProvider;
+pub use ollama::OllamaProvider;
+pub use openai::OpenAiProvider;

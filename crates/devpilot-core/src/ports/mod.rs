@@ -8,6 +8,7 @@
 mod analyzer;
 mod cache;
 mod git;
+mod llm;
 mod progress;
 mod recent;
 mod scanner;
@@ -15,6 +16,7 @@ mod scanner;
 pub use analyzer::CodeAnalyzer;
 pub use cache::AnalysisCache;
 pub use git::GitReader;
+pub use llm::{LlmProvider, TokenStream};
 pub use progress::ProgressReporter;
 pub use recent::RecentProjectsStore;
 pub use scanner::ProjectScanner;
