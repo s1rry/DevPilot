@@ -553,21 +553,21 @@ dependencies = [
 
 [[package]]
 name = "devpilot-ai"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "devpilot-core",
 ]
 
 [[package]]
 name = "devpilot-analysis"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "devpilot-core",
 ]
 
 [[package]]
 name = "devpilot-core"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "async-trait",
  "serde",
@@ -576,8 +576,11 @@ dependencies = [
 
 [[package]]
 name = "devpilot-desktop"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
+ "devpilot-core",
+ "devpilot-git",
+ "devpilot-storage",
  "serde",
  "serde_json",
  "tauri",
@@ -586,7 +589,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-git"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "async-trait",
  "devpilot-core",
@@ -597,7 +600,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-storage"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "async-trait",
  "devpilot-core",
@@ -609,7 +612,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-testing"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "async-trait",
  "devpilot-core",

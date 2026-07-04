@@ -6,6 +6,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
 (the first working repository analysis will be `0.1`).
 
+## [0.0.5] - 2026-07-04
+
+### Added
+
+- Repository Manager wiring (internal, no user-facing UI yet):
+  - Tauri composition root (`di.rs`) building the concrete adapters
+    (`Git2Reader`, `JsonRecentProjectsStore`) into `AppState` under the app
+    data directory. First real dependency injection.
+  - Thin IPC commands: `open_folder`, `clone_repository`,
+    `list_recent_projects`, `remove_recent_project`.
+  - Typed frontend IPC layer (`lib/ipc/repository.ts`) mirroring the core
+    entities; the only place the UI talks to Rust for repositories.
+
 ## [0.0.4] - 2026-07-03
 
 ### Added
