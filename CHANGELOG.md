@@ -6,6 +6,20 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
 (the first working repository analysis will be `0.1`).
 
+## [0.0.6] - 2026-07-04
+
+### Added
+
+- Repository Manager UI, completing the feature (no AI):
+  - Open a local folder via the native file picker
+    (`tauri-plugin-dialog`), or clone a GitHub repository by URL with a
+    busy state.
+  - Recent projects list: reopen on click, remove, relative timestamps.
+  - Project metadata panel: branch, commits, files, size and a language
+    breakdown.
+  - New `RepositoryView` feature slice with its own Zustand store; all
+    backend access flows through the typed `lib/ipc` layer.
+
 ## [0.0.5] - 2026-07-04
 
 ### Added
