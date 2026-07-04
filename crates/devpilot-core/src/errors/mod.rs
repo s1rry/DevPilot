@@ -82,3 +82,23 @@ pub enum CacheError {
     #[error("cache backend error: {0}")]
     Backend(String),
 }
+
+/// Errors produced by [`crate::ports::RecentProjectsStore`] implementations.
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
+pub enum StoreError {
+    /// Any backend failure (I/O, serialization).
+    #[error("recent projects store error: {0}")]
+    Backend(String),
+}
+
+/// Errors of the project use cases, aggregating the ports they depend on.
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
+pub enum ProjectError {
+    /// A git operation failed.
+    #[error(transparent)]
+    Git(#[from] GitError),
+
+    /// Persisting the recent-projects list failed.
+    #[error(transparent)]
+    Store(#[from] StoreError),
+}

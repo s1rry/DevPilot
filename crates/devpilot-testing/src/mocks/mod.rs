@@ -9,8 +9,10 @@ mod analyzer;
 mod cache;
 mod git;
 mod progress;
+mod recent;
 
 pub use analyzer::MockCodeAnalyzer;
 pub use cache::MockAnalysisCache;
 pub use git::MockGitReader;
 pub use progress::RecordingProgressReporter;
+pub use recent::MockRecentProjectsStore;

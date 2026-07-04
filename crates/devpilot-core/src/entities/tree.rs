@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
@@ -43,6 +44,30 @@ impl FileNode {
             Self::Directory { children, .. } => children.iter().map(FileNode::file_count).sum(),
         }
     }
+
+    /// Total size in bytes of all files in this subtree.
+    pub fn total_size_bytes(&self) -> u64 {
+        match self {
+            Self::File { size_bytes, .. } => *size_bytes,
+            Self::Directory { children, .. } => {
+                children.iter().map(FileNode::total_size_bytes).sum()
+            }
+        }
+    }
+
+    /// Accumulates a per-language file count over this subtree into `counts`.
+    fn accumulate_language_counts(&self, counts: &mut BTreeMap<Language, usize>) {
+        match self {
+            Self::File { language, .. } => {
+                *counts.entry(*language).or_insert(0) += 1;
+            }
+            Self::Directory { children, .. } => {
+                for child in children {
+                    child.accumulate_language_counts(counts);
+                }
+            }
+        }
+    }
 }
 
 /// The complete file tree of a repository at a given commit.
@@ -56,6 +81,18 @@ impl FileTree {
     /// Total number of files in the tree.
     pub fn file_count(&self) -> usize {
         self.root.file_count()
+    }
+
+    /// Total size in bytes of all files in the tree.
+    pub fn total_size_bytes(&self) -> u64 {
+        self.root.total_size_bytes()
+    }
+
+    /// File count per language, ordered by language for determinism.
+    pub fn language_counts(&self) -> BTreeMap<Language, usize> {
+        let mut counts = BTreeMap::new();
+        self.root.accumulate_language_counts(&mut counts);
+        counts
     }
 }
 

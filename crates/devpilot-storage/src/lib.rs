@@ -1,15 +1,18 @@
 //! # devpilot-storage
 //!
-//! Local persistence adapter for DevPilot. Implements the cache and settings
-//! ports from `devpilot-core` on top of SQLite (`rusqlite`).
+//! Local persistence adapters for DevPilot.
 //!
-//! Planned contents (added with roadmap phases 2-3):
+//! - [`JsonRecentProjectsStore`] — the recent-projects list, kept in a small
+//!   JSON file in the application data directory.
 //!
-//! - Analysis result cache keyed by commit hash.
-//! - Application settings, including AI provider configuration.
-//! - Secure handling of API keys.
+//! A SQLite-backed analysis cache will join this crate in a later phase,
+//! when it earns its complexity.
 //!
 //! ## Rules
 //!
-//! - SQLite types and SQL never leak out of this crate.
-//! - Schema migrations are versioned and forward-only.
+//! - Storage formats and file layout never leak out of this crate; the
+//!   public API speaks `devpilot-core` entities only.
+
+mod recent_projects;
+
+pub use recent_projects::JsonRecentProjectsStore;

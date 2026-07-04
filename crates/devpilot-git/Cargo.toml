@@ -9,3 +9,9 @@ authors.workspace = true
 
 [dependencies]
 devpilot-core = { path = "../devpilot-core" }
+async-trait = { workspace = true }
+git2 = { workspace = true }
+tokio = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
