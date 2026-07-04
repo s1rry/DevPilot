@@ -15,6 +15,7 @@ mod metrics;
 mod project;
 mod repository;
 mod scan;
+mod settings;
 mod tree;
 
 pub use analysis::{
@@ -33,4 +34,5 @@ pub use scan::{
     Dependency, Detection, Ecosystem, FolderSummary, Framework, FrameworkCategory, GitSummary,
     ScanReport,
 };
+pub use settings::{AiSettings, ProviderKind};
 pub use tree::{FileNode, FileTree};

@@ -18,6 +18,7 @@
 //! - See ADR-0001 and ADR-0002 in `docs/adr/`.
 
 pub mod architecture;
+pub mod chat;
 pub mod entities;
 pub mod errors;
 pub mod ports;

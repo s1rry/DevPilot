@@ -6,11 +6,13 @@
 //! `devpilot-testing`.
 
 mod analyze_architecture;
+mod chat_with_repository;
 mod open_project;
 mod recent_projects;
 mod scan_repository;
 
 pub use analyze_architecture::AnalyzeArchitecture;
+pub use chat_with_repository::ChatWithRepository;
 pub use open_project::OpenProject;
 pub use recent_projects::{ListRecentProjects, RemoveRecentProject};
 pub use scan_repository::ScanRepository;

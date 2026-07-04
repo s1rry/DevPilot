@@ -123,6 +123,18 @@ pub enum RepoScanError {
     Scan(#[from] ScanError),
 }
 
+/// Errors of the chat use case, aggregating its ports.
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
+pub enum ChatError {
+    /// A git operation failed while gathering context.
+    #[error(transparent)]
+    Git(#[from] GitError),
+
+    /// The provider rejected the request before streaming.
+    #[error(transparent)]
+    Llm(#[from] LlmError),
+}
+
 /// Errors produced by [`crate::ports::LlmProvider`] implementations.
 #[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum LlmError {

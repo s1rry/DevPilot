@@ -12,6 +12,7 @@ mod llm;
 mod progress;
 mod recent;
 mod scanner;
+mod settings;
 
 pub use analyzer::CodeAnalyzer;
 pub use cache::AnalysisCache;
@@ -20,3 +21,4 @@ pub use llm::{LlmProvider, TokenStream};
 pub use progress::ProgressReporter;
 pub use recent::RecentProjectsStore;
 pub use scanner::ProjectScanner;
+pub use settings::SettingsStore;

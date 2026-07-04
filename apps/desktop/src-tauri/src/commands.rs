@@ -7,12 +7,15 @@
 use std::path::PathBuf;
 
 use devpilot_core::entities::{
-    ArchitectureModel, FileAst, ProjectMetadata, RecentProject, RepositoryId, RepositorySource,
-    ScanReport, SourceFile,
+    AiSettings, ArchitectureModel, ChatMessage, FileAst, ProjectMetadata, RecentProject,
+    RepositoryId, RepositorySource, ScanReport, SourceFile,
 };
 use devpilot_core::usecases::{
-    AnalyzeArchitecture, ListRecentProjects, OpenProject, RemoveRecentProject, ScanRepository,
+    AnalyzeArchitecture, ChatWithRepository, ListRecentProjects, OpenProject, RemoveRecentProject,
+    ScanRepository,
 };
+use futures_util::StreamExt;
+use tauri::ipc::Channel;
 use tauri::State;
 
 use crate::state::AppState;
@@ -122,4 +125,62 @@ pub async fn export_architecture(
         .await
         .map_err(|error| format!("writing {out_path}: {error}"))?;
     Ok(out_path)
+}
+
+/// Returns the current AI settings.
+#[tauri::command]
+pub async fn get_ai_settings(state: State<'_, AppState>) -> Result<AiSettings, String> {
+    state
+        .settings
+        .load()
+        .await
+        .map_err(|error| error.to_string())
+}
+
+/// Persists new AI settings.
+#[tauri::command]
+pub async fn set_ai_settings(
+    settings: AiSettings,
+    state: State<'_, AppState>,
+) -> Result<(), String> {
+    state
+        .settings
+        .save(&settings)
+        .await
+        .map_err(|error| error.to_string())
+}
+
+/// Runs one repository-aware chat turn, streaming reply tokens to `on_token`.
+///
+/// The provider and model come from the stored settings. `messages` is the
+/// full conversation so far, oldest first.
+#[tauri::command]
+pub async fn chat(
+    path: String,
+    messages: Vec<ChatMessage>,
+    on_token: Channel<String>,
+    state: State<'_, AppState>,
+) -> Result<(), String> {
+    let settings = state
+        .settings
+        .load()
+        .await
+        .map_err(|error| error.to_string())?;
+    let provider = devpilot_ai::build_provider(&settings);
+    let use_case = ChatWithRepository::new(state.git.clone(), provider);
+
+    let mut stream = use_case
+        .execute(
+            RepositorySource::LocalPath(PathBuf::from(path)),
+            settings.model,
+            messages,
+        )
+        .await
+        .map_err(|error| error.to_string())?;
+
+    while let Some(item) = stream.next().await {
+        let token = item.map_err(|error| error.to_string())?;
+        on_token.send(token).map_err(|error| error.to_string())?;
+    }
+    Ok(())
 }

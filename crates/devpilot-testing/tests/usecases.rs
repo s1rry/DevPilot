@@ -6,18 +6,20 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use devpilot_core::entities::{
-    Dependency, Detection, Ecosystem, EdgeKind, FileAst, Framework, FrameworkCategory, FunctionDef,
-    ImportDecl, Language, RepositoryId,
+    ChatMessage, Dependency, Detection, Ecosystem, EdgeKind, FileAst, Framework, FrameworkCategory,
+    FunctionDef, ImportDecl, Language, RepositoryId, Role,
 };
 use devpilot_core::errors::{GitError, ProjectError, RepoScanError, ScanError, StoreError};
 use devpilot_core::ports::RecentProjectsStore;
 use devpilot_core::usecases::{
-    AnalyzeArchitecture, ListRecentProjects, OpenProject, RemoveRecentProject, ScanRepository,
+    AnalyzeArchitecture, ChatWithRepository, ListRecentProjects, OpenProject, RemoveRecentProject,
+    ScanRepository,
 };
 use devpilot_testing::fixtures;
 use devpilot_testing::mocks::{
-    MockCodeAnalyzer, MockGitReader, MockProjectScanner, MockRecentProjectsStore,
+    MockCodeAnalyzer, MockGitReader, MockLlmProvider, MockProjectScanner, MockRecentProjectsStore,
 };
+use futures_util::StreamExt;
 
 #[tokio::test]
 async fn open_project_builds_metadata_and_records_recent() {
@@ -230,4 +232,37 @@ async fn analyze_architecture_builds_graphs_from_parsed_files() {
 
     // Folder graph contains the src directory.
     assert!(model.folder_graph.nodes.iter().any(|n| n.id == "src"));
+}
+
+#[tokio::test]
+async fn chat_with_repository_streams_provider_tokens() {
+    let git = Arc::new(MockGitReader::new());
+    let provider = Arc::new(MockLlmProvider::new(["Hi", " there"]));
+    let use_case = ChatWithRepository::new(git, provider);
+
+    let history = vec![ChatMessage::new(Role::User, "what does lib.rs do?")];
+    let mut stream = use_case
+        .execute(fixtures::sample_local_source(), "llama3".into(), history)
+        .await
+        .expect("chat should start");
+
+    let mut tokens = Vec::new();
+    while let Some(item) = stream.next().await {
+        tokens.push(item.expect("token"));
+    }
+    assert_eq!(tokens, vec!["Hi", " there"]);
+}
+
+#[tokio::test]
+async fn chat_with_repository_surfaces_git_error() {
+    let git = Arc::new(MockGitReader::new().with_open_error(GitError::EmptyRepository));
+    let provider = Arc::new(MockLlmProvider::new(["ignored"]));
+    let use_case = ChatWithRepository::new(git, provider);
+
+    let history = vec![ChatMessage::new(Role::User, "hello")];
+    let result = use_case
+        .execute(fixtures::sample_local_source(), "llama3".into(), history)
+        .await;
+
+    assert!(result.is_err());
 }

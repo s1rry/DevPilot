@@ -12,6 +12,7 @@ mod llm;
 mod progress;
 mod recent;
 mod scanner;
+mod settings;
 
 pub use analyzer::MockCodeAnalyzer;
 pub use cache::MockAnalysisCache;
@@ -20,3 +21,4 @@ pub use llm::MockLlmProvider;
 pub use progress::RecordingProgressReporter;
 pub use recent::MockRecentProjectsStore;
 pub use scanner::MockProjectScanner;
+pub use settings::MockSettingsStore;
