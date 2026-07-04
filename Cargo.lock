@@ -578,6 +578,9 @@ dependencies = [
 name = "devpilot-desktop"
 version = "0.0.4"
 dependencies = [
+ "devpilot-core",
+ "devpilot-git",
+ "devpilot-storage",
  "serde",
  "serde_json",
  "tauri",
