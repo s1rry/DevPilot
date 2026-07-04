@@ -122,3 +122,30 @@ pub enum RepoScanError {
     #[error(transparent)]
     Scan(#[from] ScanError),
 }
+
+/// Errors produced by [`crate::ports::LlmProvider`] implementations.
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
+pub enum LlmError {
+    /// The API key was missing, invalid or rejected (HTTP 401/403).
+    #[error("authentication failed")]
+    AuthFailed,
+
+    /// The provider rate-limited the request (HTTP 429).
+    #[error("rate limited")]
+    RateLimited {
+        /// Seconds to wait before retrying, if the provider stated one.
+        retry_after_seconds: Option<u64>,
+    },
+
+    /// The request exceeded the model's context window.
+    #[error("context too long")]
+    ContextTooLong,
+
+    /// A transport-level failure (DNS, TLS, connection, timeout).
+    #[error("network error: {0}")]
+    Network(String),
+
+    /// Any other provider-side failure, with the provider's message.
+    #[error("provider error: {0}")]
+    Backend(String),
+}

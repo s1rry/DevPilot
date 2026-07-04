@@ -8,6 +8,7 @@
 mod analyzer;
 mod cache;
 mod git;
+mod llm;
 mod progress;
 mod recent;
 mod scanner;
@@ -15,6 +16,7 @@ mod scanner;
 pub use analyzer::MockCodeAnalyzer;
 pub use cache::MockAnalysisCache;
 pub use git::MockGitReader;
+pub use llm::MockLlmProvider;
 pub use progress::RecordingProgressReporter;
 pub use recent::MockRecentProjectsStore;
 pub use scanner::MockProjectScanner;

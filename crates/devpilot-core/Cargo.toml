@@ -9,5 +9,6 @@ authors.workspace = true
 
 [dependencies]
 async-trait = { workspace = true }
+futures-core = { workspace = true }
 serde = { workspace = true }
 thiserror = { workspace = true }
