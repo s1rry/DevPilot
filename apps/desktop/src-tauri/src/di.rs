@@ -4,6 +4,7 @@
 
 use std::sync::Arc;
 
+use devpilot_analysis::TreeSitterAnalyzer;
 use devpilot_git::Git2Reader;
 use devpilot_scan::FsProjectScanner;
 use devpilot_storage::JsonRecentProjectsStore;
@@ -27,10 +28,12 @@ pub fn build_state(app: &AppHandle) -> Result<AppState, String> {
         data_dir.join("recent-projects.json"),
     ));
     let scanner = Arc::new(FsProjectScanner::new());
+    let analyzer = Arc::new(TreeSitterAnalyzer::new());
 
     Ok(AppState {
         git,
         recent,
         scanner,
+        analyzer,
     })
 }

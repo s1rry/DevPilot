@@ -20,6 +20,23 @@ Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
   - New `RepositoryView` feature slice with its own Zustand store; all
     backend access flows through the typed `lib/ipc` layer.
 
+## [0.1.1] - 2026-07-04
+
+### Added
+
+- AST analyzer (no AI, internal model): parses a source file into a
+  structural `FileAst` — functions, classes, interfaces, imports, exports.
+  - `devpilot-analysis` now implements the `CodeAnalyzer` port on tree-sitter
+    for Rust and TypeScript/JavaScript (incl. TSX/JSX grammars). Pure
+    syntactic extraction; a parse failure is a per-file error, not a panic.
+  - The `CodeAnalyzer` port is refocused from metrics onto AST parsing
+    (`parse -> FileAst`); metrics types remain for a later step.
+  - `parse_file` Tauri command wired through DI; typed `lib/ipc/ast.ts`.
+
+### Changed
+
+- `Language` now derives `Default` (`Unknown`).
+
 ## [0.1.0] - 2026-07-04
 
 First milestone: DevPilot can analyze a repository end to end.

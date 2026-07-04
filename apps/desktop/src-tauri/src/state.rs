@@ -6,7 +6,7 @@
 
 use std::sync::Arc;
 
-use devpilot_core::ports::{GitReader, ProjectScanner, RecentProjectsStore};
+use devpilot_core::ports::{CodeAnalyzer, GitReader, ProjectScanner, RecentProjectsStore};
 
 /// Shared, injected dependencies available to every command handler.
 pub struct AppState {
@@ -16,4 +16,6 @@ pub struct AppState {
     pub recent: Arc<dyn RecentProjectsStore>,
     /// Project scanning, backed by manifest detection.
     pub scanner: Arc<dyn ProjectScanner>,
+    /// AST parsing, backed by tree-sitter.
+    pub analyzer: Arc<dyn CodeAnalyzer>,
 }
