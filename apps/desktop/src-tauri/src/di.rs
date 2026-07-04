@@ -5,6 +5,7 @@
 use std::sync::Arc;
 
 use devpilot_git::Git2Reader;
+use devpilot_scan::FsProjectScanner;
 use devpilot_storage::JsonRecentProjectsStore;
 use tauri::{AppHandle, Manager};
 
@@ -25,6 +26,11 @@ pub fn build_state(app: &AppHandle) -> Result<AppState, String> {
     let recent = Arc::new(JsonRecentProjectsStore::new(
         data_dir.join("recent-projects.json"),
     ));
+    let scanner = Arc::new(FsProjectScanner::new());
 
-    Ok(AppState { git, recent })
+    Ok(AppState {
+        git,
+        recent,
+        scanner,
+    })
 }

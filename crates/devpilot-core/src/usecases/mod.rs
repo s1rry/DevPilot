@@ -7,6 +7,8 @@
 
 mod open_project;
 mod recent_projects;
+mod scan_repository;
 
 pub use open_project::OpenProject;
 pub use recent_projects::{ListRecentProjects, RemoveRecentProject};
+pub use scan_repository::ScanRepository;

@@ -6,7 +6,7 @@
 
 use std::sync::Arc;
 
-use devpilot_core::ports::{GitReader, RecentProjectsStore};
+use devpilot_core::ports::{GitReader, ProjectScanner, RecentProjectsStore};
 
 /// Shared, injected dependencies available to every command handler.
 pub struct AppState {
@@ -14,4 +14,6 @@ pub struct AppState {
     pub git: Arc<dyn GitReader>,
     /// Recent-projects persistence, backed by a JSON file.
     pub recent: Arc<dyn RecentProjectsStore>,
+    /// Project scanning, backed by manifest detection.
+    pub scanner: Arc<dyn ProjectScanner>,
 }

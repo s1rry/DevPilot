@@ -102,3 +102,23 @@ pub enum ProjectError {
     #[error(transparent)]
     Store(#[from] StoreError),
 }
+
+/// Errors produced by [`crate::ports::ProjectScanner`] implementations.
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
+pub enum ScanError {
+    /// Reading the working copy failed.
+    #[error("scan backend error: {0}")]
+    Backend(String),
+}
+
+/// Errors of the repository scan use case, aggregating its ports.
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
+pub enum RepoScanError {
+    /// A git operation failed.
+    #[error(transparent)]
+    Git(#[from] GitError),
+
+    /// Manifest detection failed.
+    #[error(transparent)]
+    Scan(#[from] ScanError),
+}

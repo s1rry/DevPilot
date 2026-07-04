@@ -6,8 +6,12 @@
 
 use std::path::PathBuf;
 
-use devpilot_core::entities::{ProjectMetadata, RecentProject, RepositoryId, RepositorySource};
-use devpilot_core::usecases::{ListRecentProjects, OpenProject, RemoveRecentProject};
+use devpilot_core::entities::{
+    ProjectMetadata, RecentProject, RepositoryId, RepositorySource, ScanReport,
+};
+use devpilot_core::usecases::{
+    ListRecentProjects, OpenProject, RemoveRecentProject, ScanRepository,
+};
 use tauri::State;
 
 use crate::state::AppState;
@@ -53,6 +57,17 @@ pub async fn remove_recent_project(id: String, state: State<'_, AppState>) -> Re
     let use_case = RemoveRecentProject::new(state.recent.clone());
     use_case
         .execute(&RepositoryId::new(id))
+        .await
+        .map_err(|error| error.to_string())
+}
+
+/// Scans a local project folder: languages, frameworks, dependencies,
+/// structure and git information.
+#[tauri::command]
+pub async fn scan_folder(path: String, state: State<'_, AppState>) -> Result<ScanReport, String> {
+    let use_case = ScanRepository::new(state.git.clone(), state.scanner.clone());
+    use_case
+        .execute(RepositorySource::LocalPath(PathBuf::from(path)))
         .await
         .map_err(|error| error.to_string())
 }

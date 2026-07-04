@@ -4,12 +4,16 @@
 
 use std::sync::Arc;
 
-use devpilot_core::entities::{Language, RepositoryId};
-use devpilot_core::errors::{GitError, ProjectError, StoreError};
+use devpilot_core::entities::{
+    Dependency, Detection, Ecosystem, Framework, FrameworkCategory, Language, RepositoryId,
+};
+use devpilot_core::errors::{GitError, ProjectError, RepoScanError, ScanError, StoreError};
 use devpilot_core::ports::RecentProjectsStore;
-use devpilot_core::usecases::{ListRecentProjects, OpenProject, RemoveRecentProject};
+use devpilot_core::usecases::{
+    ListRecentProjects, OpenProject, RemoveRecentProject, ScanRepository,
+};
 use devpilot_testing::fixtures;
-use devpilot_testing::mocks::{MockGitReader, MockRecentProjectsStore};
+use devpilot_testing::mocks::{MockGitReader, MockProjectScanner, MockRecentProjectsStore};
 
 #[tokio::test]
 async fn open_project_builds_metadata_and_records_recent() {
@@ -90,4 +94,75 @@ async fn remove_recent_project_deletes_entry() {
         .expect("remove");
 
     assert!(store.is_empty());
+}
+
+#[tokio::test]
+async fn scan_repository_assembles_full_report() {
+    let git = Arc::new(MockGitReader::new().with_branch("main"));
+    let detection = Detection {
+        frameworks: vec![Framework {
+            name: "React".into(),
+            category: FrameworkCategory::Frontend,
+            source: "package.json".into(),
+        }],
+        dependencies: vec![Dependency {
+            name: "react".into(),
+            version: Some("^18".into()),
+            ecosystem: Ecosystem::Npm,
+        }],
+    };
+    let scanner = Arc::new(MockProjectScanner::new().with_detection(detection));
+    let use_case = ScanRepository::new(git, scanner);
+
+    let report = use_case
+        .execute(fixtures::sample_local_source())
+        .await
+        .expect("scan should succeed");
+
+    // Languages from the sample tree: 2 Rust, 1 unknown.
+    assert_eq!(report.languages[0].language, Language::Rust);
+    assert_eq!(report.languages[0].file_count, 2);
+
+    // Structure: sample tree has one top-level dir `src`, three files.
+    assert_eq!(report.structure.total_files, 3);
+    assert_eq!(report.structure.top_level_dirs, vec!["src".to_string()]);
+    assert_eq!(report.structure.notable, vec!["src".to_string()]);
+
+    // Git: two commits, two contributors, newest commit is last_commit.
+    assert_eq!(report.git.branch, "main");
+    assert_eq!(report.git.commit_count, 2);
+    assert_eq!(report.git.contributors.len(), 2);
+    assert_eq!(
+        report.git.last_commit.as_ref().unwrap().summary,
+        "Add library module"
+    );
+
+    // Detection passed through.
+    assert_eq!(report.frameworks[0].name, "React");
+    assert_eq!(report.dependencies[0].name, "react");
+}
+
+#[tokio::test]
+async fn scan_repository_propagates_git_error() {
+    let git = Arc::new(MockGitReader::new().with_open_error(GitError::EmptyRepository));
+    let scanner = Arc::new(MockProjectScanner::new());
+    let use_case = ScanRepository::new(git, scanner);
+
+    let result = use_case.execute(fixtures::sample_local_source()).await;
+
+    assert_eq!(result, Err(RepoScanError::Git(GitError::EmptyRepository)));
+}
+
+#[tokio::test]
+async fn scan_repository_propagates_scan_error() {
+    let git = Arc::new(MockGitReader::new());
+    let scanner = Arc::new(MockProjectScanner::failing(ScanError::Backend("io".into())));
+    let use_case = ScanRepository::new(git, scanner);
+
+    let result = use_case.execute(fixtures::sample_local_source()).await;
+
+    assert_eq!(
+        result,
+        Err(RepoScanError::Scan(ScanError::Backend("io".into())))
+    );
 }

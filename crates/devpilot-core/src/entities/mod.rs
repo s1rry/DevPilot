@@ -11,6 +11,7 @@ mod metadata;
 mod metrics;
 mod project;
 mod repository;
+mod scan;
 mod tree;
 
 pub use analysis::{
@@ -22,4 +23,8 @@ pub use metadata::{LanguageStat, ProjectMetadata};
 pub use metrics::{FileMetrics, FunctionMetrics};
 pub use project::RecentProject;
 pub use repository::{Repository, RepositoryId, RepositorySource};
+pub use scan::{
+    Dependency, Detection, Ecosystem, FolderSummary, Framework, FrameworkCategory, GitSummary,
+    ScanReport,
+};
 pub use tree::{FileNode, FileTree};
