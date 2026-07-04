@@ -18,6 +18,7 @@ fn main() {
     // webview runtime, or unresolvable data directory), so aborting with the
     // cause is the correct behavior.
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             let state = di::build_state(&app.handle().clone())?;
             app.manage(state);
