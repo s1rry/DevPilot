@@ -8,6 +8,7 @@ mod analysis;
 mod ast;
 mod graph;
 mod history;
+mod intel;
 mod language;
 mod llm;
 mod metadata;
@@ -24,6 +25,9 @@ pub use analysis::{
 pub use ast::{ClassDef, ExportDecl, ExportKind, FileAst, FunctionDef, ImportDecl, InterfaceDef};
 pub use graph::{ArchitectureModel, EdgeKind, Graph, GraphEdge, GraphNode, NodeKind};
 pub use history::{AuthorStats, CommitHash, CommitInfo, FileChurn};
+pub use intel::{
+    CodeIntelligenceReport, Cycle, DeadSymbol, DuplicationGroup, DuplicationLocation, SearchHit,
+};
 pub use language::Language;
 pub use llm::{ChatMessage, ChatRequest, ModelInfo, Role};
 pub use metadata::{LanguageStat, ProjectMetadata};

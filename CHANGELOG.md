@@ -20,6 +20,21 @@ Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
   - New `RepositoryView` feature slice with its own Zustand store; all
     backend access flows through the typed `lib/ipc` layer.
 
+## [0.2.1] - 2026-07-05
+
+### Added
+
+- Code Intelligence backend (sub-step; no UI yet), no AI:
+  - Deterministic detectors in `devpilot-core::intel`: cyclic dependencies
+    (Tarjan SCC over the dependency graph), dead code (functions with no
+    detected callers, not exported or `main` — heuristic), duplication
+    (identical normalized line blocks), and code search (rank symbols and
+    paths by query overlap).
+  - `AnalyzeCodeIntelligence` and `SearchCode` use cases (parse the repo,
+    build the architecture graphs, run the detectors).
+  - Tauri commands via DI: `analyze_code_intelligence`, `search_code`; typed
+    `lib/ipc/intel.ts`.
+
 ## [0.2.0] - 2026-07-04
 
 Milestone: you can now chat with your repository.

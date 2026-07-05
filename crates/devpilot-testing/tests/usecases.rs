@@ -12,8 +12,8 @@ use devpilot_core::entities::{
 use devpilot_core::errors::{GitError, ProjectError, RepoScanError, ScanError, StoreError};
 use devpilot_core::ports::RecentProjectsStore;
 use devpilot_core::usecases::{
-    AnalyzeArchitecture, ChatWithRepository, ListRecentProjects, OpenProject, RemoveRecentProject,
-    ScanRepository,
+    AnalyzeArchitecture, AnalyzeCodeIntelligence, ChatWithRepository, ListRecentProjects,
+    OpenProject, RemoveRecentProject, ScanRepository, SearchCode,
 };
 use devpilot_testing::fixtures;
 use devpilot_testing::mocks::{
@@ -265,4 +265,61 @@ async fn chat_with_repository_surfaces_git_error() {
         .await;
 
     assert!(result.is_err());
+}
+
+#[tokio::test]
+async fn code_intelligence_finds_dead_code_and_search() {
+    // lib.rs: orphan (uncalled, private) + used (called by main). main.rs: main -> used.
+    let lib = FileAst {
+        path: PathBuf::from("src/lib.rs"),
+        language: Language::Rust,
+        functions: vec![
+            FunctionDef {
+                name: "orphan".into(),
+                start_line: 1,
+                end_line: 2,
+                is_async: false,
+                calls: vec![],
+            },
+            FunctionDef {
+                name: "used".into(),
+                start_line: 5,
+                end_line: 6,
+                is_async: false,
+                calls: vec![],
+            },
+        ],
+        ..FileAst::default()
+    };
+    let main = FileAst {
+        path: PathBuf::from("src/main.rs"),
+        language: Language::Rust,
+        functions: vec![FunctionDef {
+            name: "main".into(),
+            start_line: 1,
+            end_line: 3,
+            is_async: false,
+            calls: vec!["used".into()],
+        }],
+        ..FileAst::default()
+    };
+
+    let git = Arc::new(MockGitReader::new());
+    let analyzer = Arc::new(MockCodeAnalyzer::new().with_ast(lib).with_ast(main));
+
+    let report = AnalyzeCodeIntelligence::new(git.clone(), analyzer.clone())
+        .execute(fixtures::sample_local_source())
+        .await
+        .expect("analyze");
+    assert!(report.dead_code.iter().any(|d| d.name == "orphan"));
+    assert!(!report
+        .dead_code
+        .iter()
+        .any(|d| d.name == "used" || d.name == "main"));
+
+    let hits = SearchCode::new(git, analyzer)
+        .execute(fixtures::sample_local_source(), "where is orphan".into())
+        .await
+        .expect("search");
+    assert!(hits.iter().any(|h| h.symbol.as_deref() == Some("orphan")));
 }

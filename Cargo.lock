@@ -629,7 +629,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-ai"
-version = "0.1.3"
+version = "0.2.0"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -646,7 +646,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-analysis"
-version = "0.1.3"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "devpilot-core",
@@ -659,7 +659,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-core"
-version = "0.1.3"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "futures-core",
@@ -669,7 +669,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-desktop"
-version = "0.1.3"
+version = "0.2.0"
 dependencies = [
  "devpilot-ai",
  "devpilot-analysis",
@@ -688,7 +688,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-git"
-version = "0.1.3"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "devpilot-core",
@@ -699,7 +699,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-scan"
-version = "0.1.3"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "devpilot-core",
@@ -711,7 +711,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-storage"
-version = "0.1.3"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "devpilot-core",
@@ -723,7 +723,7 @@ dependencies = [
 
 [[package]]
 name = "devpilot-testing"
-version = "0.1.3"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "devpilot-core",
