@@ -20,6 +20,15 @@ Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
   - New `RepositoryView` feature slice with its own Zustand store; all
     backend access flows through the typed `lib/ipc` layer.
 
+## [0.2.2] - 2026-07-05
+
+### Added
+
+- Code Intelligence UI (Insights tab): run the detectors and browse findings.
+  - Panels for cyclic dependencies, dead code and duplication.
+  - Code search box ("where is authentication?") listing symbol/path hits.
+  - "Explain" on a search hit hands the symbol to AI Chat and switches to it.
+
 ## [0.2.1] - 2026-07-05
 
 ### Added
