@@ -7,12 +7,12 @@
 use std::path::PathBuf;
 
 use devpilot_core::entities::{
-    AiSettings, ArchitectureModel, ChatMessage, FileAst, ProjectMetadata, RecentProject,
-    RepositoryId, RepositorySource, ScanReport, SourceFile,
+    AiSettings, ArchitectureModel, ChatMessage, CodeIntelligenceReport, FileAst, ProjectMetadata,
+    RecentProject, RepositoryId, RepositorySource, ScanReport, SearchHit, SourceFile,
 };
 use devpilot_core::usecases::{
-    AnalyzeArchitecture, ChatWithRepository, ListRecentProjects, OpenProject, RemoveRecentProject,
-    ScanRepository,
+    AnalyzeArchitecture, AnalyzeCodeIntelligence, ChatWithRepository, ListRecentProjects,
+    OpenProject, RemoveRecentProject, ScanRepository, SearchCode,
 };
 use futures_util::StreamExt;
 use tauri::ipc::Channel;
@@ -125,6 +125,34 @@ pub async fn export_architecture(
         .await
         .map_err(|error| format!("writing {out_path}: {error}"))?;
     Ok(out_path)
+}
+
+/// Runs the deterministic code-intelligence detectors (cyclic dependencies,
+/// dead code, duplication) over a project.
+#[tauri::command]
+pub async fn analyze_code_intelligence(
+    path: String,
+    state: State<'_, AppState>,
+) -> Result<CodeIntelligenceReport, String> {
+    let use_case = AnalyzeCodeIntelligence::new(state.git.clone(), state.analyzer.clone());
+    use_case
+        .execute(RepositorySource::LocalPath(PathBuf::from(path)))
+        .await
+        .map_err(|error| error.to_string())
+}
+
+/// Searches a project's symbols and paths for a query.
+#[tauri::command]
+pub async fn search_code(
+    path: String,
+    query: String,
+    state: State<'_, AppState>,
+) -> Result<Vec<SearchHit>, String> {
+    let use_case = SearchCode::new(state.git.clone(), state.analyzer.clone());
+    use_case
+        .execute(RepositorySource::LocalPath(PathBuf::from(path)), query)
+        .await
+        .map_err(|error| error.to_string())
 }
 
 /// Returns the current AI settings.

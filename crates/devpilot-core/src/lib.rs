@@ -21,5 +21,6 @@ pub mod architecture;
 pub mod chat;
 pub mod entities;
 pub mod errors;
+pub mod intel;
 pub mod ports;
 pub mod usecases;

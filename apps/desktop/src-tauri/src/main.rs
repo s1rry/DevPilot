@@ -33,6 +33,8 @@ fn main() {
             commands::parse_file,
             commands::analyze_architecture,
             commands::export_architecture,
+            commands::analyze_code_intelligence,
+            commands::search_code,
             commands::get_ai_settings,
             commands::set_ai_settings,
             commands::chat,
