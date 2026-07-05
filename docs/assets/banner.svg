@@ -1,0 +1,71 @@
+<svg width="1280" height="400" viewBox="0 0 1280 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0f1a"/>
+      <stop offset="0.5" stop-color="#141a2e"/>
+      <stop offset="1" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a5b4fc"/>
+      <stop offset="1" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#c7d2fe"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.28" cy="0.42" r="0.5">
+      <stop offset="0" stop-color="#6366f1" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1280" height="400" fill="url(#bg)"/>
+  <rect width="1280" height="400" fill="url(#glow)"/>
+
+  <!-- faint graph motif on the right -->
+  <g opacity="0.16" stroke="#818cf8" stroke-width="2" fill="none">
+    <line x1="980" y1="120" x2="1090" y2="90"/>
+    <line x1="980" y1="120" x2="1060" y2="200"/>
+    <line x1="1060" y1="200" x2="1170" y2="180"/>
+    <line x1="1060" y1="200" x2="1100" y2="300"/>
+    <line x1="1090" y1="90" x2="1180" y2="110"/>
+    <line x1="1100" y1="300" x2="1200" y2="270"/>
+  </g>
+  <g opacity="0.9" fill="#818cf8">
+    <circle cx="980" cy="120" r="7"/><circle cx="1090" cy="90" r="6"/>
+    <circle cx="1060" cy="200" r="8"/><circle cx="1170" cy="180" r="6"/>
+    <circle cx="1100" cy="300" r="6"/><circle cx="1180" cy="110" r="5"/>
+    <circle cx="1200" cy="270" r="5"/>
+  </g>
+
+  <!-- logo mark: code chevrons + pilot arrow -->
+  <g transform="translate(120 150)">
+    <path d="M 70 -34 L 20 30 L 70 94" fill="none" stroke="#e0e7ff" stroke-width="16"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 190 -34 L 240 30 L 190 94" fill="none" stroke="#e0e7ff" stroke-width="16"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 130 -46 L 178 132 L 130 92 L 82 132 Z" fill="url(#mark)"/>
+  </g>
+
+  <!-- wordmark + tagline -->
+  <text x="420" y="185" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+        font-size="92" font-weight="700" fill="url(#word)" letter-spacing="-2">DevPilot</text>
+  <text x="424" y="238" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+        font-size="30" font-weight="500" fill="#94a3b8">AI-powered repository analyzer</text>
+
+  <!-- feature chips -->
+  <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="500" fill="#c7d2fe">
+    <g transform="translate(424 280)">
+      <rect x="0" y="0" width="176" height="42" rx="21" fill="#1e293b" stroke="#334155"/>
+      <text x="88" y="27" text-anchor="middle">Repo analysis</text>
+    </g>
+    <g transform="translate(612 280)">
+      <rect x="0" y="0" width="188" height="42" rx="21" fill="#1e293b" stroke="#334155"/>
+      <text x="94" y="27" text-anchor="middle">AI chat on code</text>
+    </g>
+    <g transform="translate(812 280)">
+      <rect x="0" y="0" width="204" height="42" rx="21" fill="#1e293b" stroke="#334155"/>
+      <text x="102" y="27" text-anchor="middle">Architecture graphs</text>
+    </g>
+  </g>
+</svg>
