@@ -1,5 +1,6 @@
 import { AiChatView } from "@/features/ai-chat/AiChatView";
 import { AnalysisView } from "@/features/analysis/AnalysisView";
+import { ArchitectureView } from "@/features/architecture/ArchitectureView";
 import { InsightsView } from "@/features/insights/InsightsView";
 import { RepositoryView } from "@/features/repository/RepositoryView";
 import { SettingsView } from "@/features/settings/SettingsView";
@@ -14,6 +15,8 @@ function renderView(view: ViewId) {
       return <RepositoryView />;
     case "analysis":
       return <AnalysisView />;
+    case "architecture":
+      return <ArchitectureView />;
     case "ai-chat":
       return <AiChatView />;
     case "insights":

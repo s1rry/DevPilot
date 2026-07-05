@@ -1,7 +1,13 @@
 import { create } from "zustand";
 
 /** Identifier of a primary view, one per feature slice. */
-export type ViewId = "repository" | "analysis" | "ai-chat" | "insights" | "settings";
+export type ViewId =
+  | "repository"
+  | "analysis"
+  | "architecture"
+  | "ai-chat"
+  | "insights"
+  | "settings";
 
 interface NavigationState {
   /** View currently shown in the content area. */
