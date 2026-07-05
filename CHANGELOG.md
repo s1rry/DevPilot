@@ -20,6 +20,16 @@ Versioning: `0.0.x` for fixes and small steps, `0.x` for milestone releases
   - New `RepositoryView` feature slice with its own Zustand store; all
     backend access flows through the typed `lib/ipc` layer.
 
+## [0.2.3] - 2026-07-05
+
+### Added
+
+- Architecture graph visualization (new Architecture tab): interactive
+  dependency, module, folder and call graphs from `analyze_architecture`.
+  - Dependency-free force-directed layout; pan (drag), zoom (wheel) and node
+    dragging; nodes colored by kind with a legend; directed edges.
+  - Large graphs are truncated to the most-connected nodes for responsiveness.
+
 ## [0.2.2] - 2026-07-05
 
 ### Added

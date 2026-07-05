@@ -1,4 +1,4 @@
-import { BarChart3, FolderGit2, Lightbulb, MessageSquare, Settings } from "lucide-react";
+import { BarChart3, FolderGit2, Lightbulb, MessageSquare, Network, Settings } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import type { ViewId } from "@/lib/store/navigation";
@@ -35,6 +35,13 @@ export const NAV_ITEMS: readonly NavItem[] = [
     icon: BarChart3,
     hint: "Code metrics, complexity and structure from tree-sitter.",
     phase: "Phase 2",
+  },
+  {
+    id: "architecture",
+    label: "Architecture",
+    icon: Network,
+    hint: "Interactive dependency, module, folder and call graphs.",
+    phase: "Phase 5",
   },
   {
     id: "ai-chat",
