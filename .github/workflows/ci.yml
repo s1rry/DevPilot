@@ -45,7 +45,10 @@ jobs:
         run: cargo test --workspace
 
   frontend:
-    name: Frontend (typecheck + test + build)
+    # Keep this job name in sync with the required status check configured on
+    # `main` — renaming it makes the required check hang forever. The Test step
+    # below runs inside this same job.
+    name: Frontend (typecheck + build)
     runs-on: ubuntu-latest
     defaults:
       run:
