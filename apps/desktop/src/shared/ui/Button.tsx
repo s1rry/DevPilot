@@ -26,15 +26,15 @@ export function Button({
 }: ButtonProps) {
   const palette =
     variant === "primary"
-      ? "bg-accent text-accent-fg hover:opacity-90"
-      : "border border-border text-fg hover:bg-elevated";
+      ? "dp-accent-surface text-accent-fg hover:brightness-110 active:brightness-95"
+      : "dp-card border border-border text-fg hover:border-border-strong hover:bg-elevated active:translate-y-px";
 
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`flex h-9 items-center gap-2 rounded-md px-3 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-50 ${palette}`}
+      className={`flex h-9 items-center gap-2 rounded-md px-3 text-sm font-medium outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-not-allowed disabled:opacity-50 ${palette}`}
     >
       {Icon && <Icon size={16} strokeWidth={2} />}
       {children}

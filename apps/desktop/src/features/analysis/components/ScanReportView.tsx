@@ -16,9 +16,9 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-3 rounded-lg border border-border bg-canvas p-4">
+    <section className="dp-card flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
       <h3 className="flex items-center gap-2 text-sm font-semibold text-fg">
-        <Icon size={16} strokeWidth={2} className="text-muted" />
+        <Icon size={16} strokeWidth={2} className="text-accent-strong" />
         {title}
       </h3>
       {children}
@@ -29,7 +29,7 @@ function Section({
 /** A compact labeled number card. */
 function Card({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-border bg-surface px-3 py-2">
+    <div className="dp-card dp-card-interactive rounded-lg border border-border bg-surface px-3 py-2">
       <span className="block text-xs text-muted">{label}</span>
       <span className="block truncate text-sm font-medium text-fg">{value}</span>
     </div>

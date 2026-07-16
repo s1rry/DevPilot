@@ -17,6 +17,12 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
+  --color-accent-strong: var(--accent-strong);
+  --color-border-strong: var(--border-strong);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
 }
 
 /* Dark theme — the default. */
@@ -30,6 +36,21 @@
   --muted: #9ca3af;
   --accent: #6366f1;
   --accent-fg: #ffffff;
+
+  /* Polish tokens. */
+  --accent-strong: #818cf8; /* brighter accent for gradient highlights */
+  --border-strong: #2c3a52; /* border on hover / raised elements */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.35);
+  --shadow-md: 0 4px 14px -4px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 12px 32px -8px rgb(0 0 0 / 0.6);
+  --accent-glow: 0 0 0 1px rgb(129 140 248 / 0.35), 0 6px 20px -6px rgb(99 102 241 / 0.55);
+  /* Subtle top-lit surface sheen for elevated cards. */
+  --surface-sheen: linear-gradient(180deg, rgb(255 255 255 / 0.035), rgb(255 255 255 / 0) 60%);
+  /* Faint accent wash for the app canvas. */
+  --canvas-glow:
+    radial-gradient(70% 55% at 20% -10%, rgb(99 102 241 / 0.10), transparent 70%),
+    radial-gradient(60% 50% at 100% 0%, rgb(129 140 248 / 0.07), transparent 65%);
+  --accent-gradient: linear-gradient(180deg, var(--accent-strong), var(--accent));
 }
 
 /* Light theme. */
@@ -42,6 +63,19 @@
   --muted: #64748b;
   --accent: #6366f1;
   --accent-fg: #ffffff;
+
+  /* Polish tokens. */
+  --accent-strong: #6366f1;
+  --border-strong: #cbd5e1;
+  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.06);
+  --shadow-md: 0 6px 16px -6px rgb(15 23 42 / 0.12);
+  --shadow-lg: 0 16px 40px -12px rgb(15 23 42 / 0.18);
+  --accent-glow: 0 0 0 1px rgb(99 102 241 / 0.25), 0 8px 22px -8px rgb(99 102 241 / 0.4);
+  --surface-sheen: linear-gradient(180deg, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0) 60%);
+  --canvas-glow:
+    radial-gradient(70% 55% at 20% -10%, rgb(99 102 241 / 0.06), transparent 70%),
+    radial-gradient(60% 50% at 100% 0%, rgb(99 102 241 / 0.05), transparent 65%);
+  --accent-gradient: linear-gradient(180deg, var(--accent-strong), var(--accent));
 }
 
 html,
@@ -72,4 +106,87 @@ body,
     background-color 0.15s ease,
     border-color 0.15s ease,
     color 0.15s ease;
+}
+
+/*
+ * Reusable visual primitives. These compose the shared "polish" language
+ * (radius + border + soft shadow + calm hover lift) so cards across features
+ * stay consistent without repeating long utility strings.
+ */
+
+/* Faint accent wash behind the app content. */
+.dp-canvas-glow {
+  background-image: var(--canvas-glow);
+}
+
+/*
+ * Radius scale — keep new components on it so the visual language stays
+ * consistent: buttons and small tabs use `rounded-md`, cards and raised
+ * surfaces use `rounded-lg`/`rounded-xl`, empty-state icons use `rounded-2xl`.
+ */
+
+/* A raised card: soft shadow, top sheen, gentle hover lift + brighter border. */
+.dp-card {
+  position: relative;
+  background-image: var(--surface-sheen);
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/* Interactive card variant: lifts and glows softly on hover. */
+.dp-card-interactive:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/*
+ * A flat, transparent row that only reveals shadow + border on hover.
+ * Used in dense lists (recent projects, search hits) where a resting
+ * shadow would be too heavy.
+ */
+.dp-row {
+  transition:
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+.dp-row:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+/* Primary accent surface: subtle vertical gradient + accent glow on hover. */
+.dp-accent-surface {
+  background-image: var(--accent-gradient);
+  box-shadow: var(--shadow-sm);
+}
+.dp-accent-surface:hover:not(:disabled) {
+  box-shadow: var(--accent-glow);
+}
+.dp-accent-glow {
+  box-shadow: var(--accent-glow);
+}
+
+/* Icon container for empty states: gradient sheen + soft ring. */
+.dp-empty-icon {
+  background-image: var(--surface-sheen);
+  box-shadow: var(--shadow-md);
+}
+
+/* Respect users who prefer reduced motion: drop transforms and eased motion. */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  [data-theme] *,
+  .dp-card,
+  .dp-card-interactive:hover,
+  button:active {
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
 }

@@ -70,9 +70,9 @@ export function ArchitectureView() {
                   key={kind}
                   type="button"
                   onClick={() => setGraph(kind)}
-                  className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
+                  className={`rounded-md px-2.5 py-1 text-xs transition-all duration-200 ${
                     active
-                      ? "bg-accent text-accent-fg"
+                      ? "dp-accent-surface dp-accent-glow text-accent-fg"
                       : "text-muted hover:bg-elevated hover:text-fg"
                   }`}
                 >
@@ -107,11 +107,11 @@ export function ArchitectureView() {
           <GraphCanvas graph={graph} />
         ) : (
           !analyzing && (
-            <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-surface text-muted">
-                <Network size={26} strokeWidth={1.75} />
+            <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
+              <div className="dp-empty-icon flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-elevated text-accent-strong">
+                <Network size={28} strokeWidth={1.75} />
               </div>
-              <p className="max-w-sm text-sm text-muted">{t("arch.emptyHint")}</p>
+              <p className="max-w-sm text-sm leading-relaxed text-muted">{t("arch.emptyHint")}</p>
             </div>
           )
         )}

@@ -17,8 +17,10 @@ export function RecentProjectsList() {
 
   if (recent.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border p-8 text-center">
-        <Clock size={22} strokeWidth={1.75} className="text-muted" />
+      <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border bg-surface/40 p-8 text-center">
+        <div className="dp-empty-icon flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-elevated text-accent-strong">
+          <Clock size={22} strokeWidth={1.75} />
+        </div>
         <p className="text-sm text-muted">{t("repo.noRecent")}</p>
       </div>
     );
@@ -28,7 +30,7 @@ export function RecentProjectsList() {
     <ul className="flex flex-col gap-1">
       {recent.map((project) => (
         <li key={project.id}>
-          <div className="group flex items-center gap-3 rounded-md border border-transparent px-3 py-2 hover:border-border hover:bg-surface">
+          <div className="dp-row group flex items-center gap-3 rounded-lg border border-transparent bg-transparent px-3 py-2 hover:border-border-strong hover:bg-surface">
             <button
               type="button"
               onClick={() => void reopen(project.local_path)}

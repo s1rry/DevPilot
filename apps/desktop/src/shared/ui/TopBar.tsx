@@ -30,7 +30,7 @@ export function TopBar() {
       </div>
 
       <div className="flex flex-1 justify-center">
-        <div className="flex h-8 w-full max-w-md items-center gap-2 rounded-md border border-border bg-canvas px-3 text-muted">
+        <div className="dp-card flex h-8 w-full max-w-md items-center gap-2 rounded-lg border border-border bg-canvas px-3 text-muted transition-colors hover:border-border-strong">
           <Search size={15} strokeWidth={2} />
           <span className="truncate text-sm">{t("topbar.searchPlaceholder")}</span>
         </div>
@@ -41,7 +41,7 @@ export function TopBar() {
         onClick={toggleLanguage}
         title={switchLanguageLabel}
         aria-label={switchLanguageLabel}
-        className="flex h-9 items-center gap-1.5 rounded-md px-2 text-sm text-muted outline-none transition-colors hover:bg-elevated hover:text-fg focus-visible:ring-2 focus-visible:ring-accent"
+        className="flex h-8 items-center gap-1.5 rounded-md px-2.5 text-sm text-muted outline-none transition-colors hover:bg-elevated hover:text-fg focus-visible:ring-2 focus-visible:ring-accent"
       >
         <Languages size={18} strokeWidth={2} />
         <span className="font-medium uppercase">{language}</span>

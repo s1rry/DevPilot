@@ -39,11 +39,11 @@ export function AiChatView() {
 
       <div className="min-h-0 flex-1 overflow-auto">
         {messages.length === 0 ? (
-          <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-surface text-muted">
-              <MessageSquare size={26} strokeWidth={1.75} />
+          <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
+            <div className="dp-empty-icon flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-elevated text-accent-strong">
+              <MessageSquare size={28} strokeWidth={1.75} />
             </div>
-            <p className="max-w-sm text-sm text-muted">
+            <p className="max-w-sm text-sm leading-relaxed text-muted">
               {projectPath ? t("chat.emptyWithProject") : t("chat.emptyNoProject")}
             </p>
           </div>

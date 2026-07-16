@@ -49,11 +49,11 @@ export function AnalysisView() {
         <ScanReportView report={report} />
       ) : (
         !error && (
-          <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-surface text-muted">
-              <ScanSearch size={26} strokeWidth={1.75} />
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
+            <div className="dp-empty-icon flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-elevated text-accent-strong">
+              <ScanSearch size={28} strokeWidth={1.75} />
             </div>
-            <p className="max-w-sm text-sm text-muted">{t("scan.emptyHint")}</p>
+            <p className="max-w-sm text-sm leading-relaxed text-muted">{t("scan.emptyHint")}</p>
           </div>
         )
       )}

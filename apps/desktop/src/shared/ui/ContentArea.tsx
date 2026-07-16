@@ -37,7 +37,7 @@ export function ContentArea() {
   const t = useT();
 
   return (
-    <section className="flex min-w-0 flex-1 flex-col overflow-hidden bg-canvas">
+    <section className="dp-canvas-glow flex min-w-0 flex-1 flex-col overflow-hidden bg-canvas">
       <div className="flex h-10 shrink-0 items-center border-b border-border px-4">
         <h1 className="text-sm font-medium text-fg">{t(current.label)}</h1>
       </div>
