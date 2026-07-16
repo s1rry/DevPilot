@@ -3,6 +3,7 @@ import { Files, FolderTree, GitBranch, GitCommitHorizontal, Package, Users } fro
 import { formatRelativeTime } from "@/shared/format";
 import type { ScanReport } from "@/lib/ipc/scan";
 import { LanguageBars } from "@/features/analysis/components/LanguageBars";
+import { useT } from "@/lib/store/i18n";
 
 /** A titled section with a leading icon. */
 function Section({
@@ -43,23 +44,24 @@ interface ScanReportViewProps {
 /** Renders a complete repository scan report. */
 export function ScanReportView({ report }: ScanReportViewProps) {
   const { git, structure, frameworks, dependencies, languages } = report;
+  const t = useT();
 
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <Card label="Branch" value={git.branch} />
-        <Card label="Commits" value={git.commit_count.toLocaleString()} />
-        <Card label="Files" value={structure.total_files.toLocaleString()} />
-        <Card label="Directories" value={structure.total_directories.toLocaleString()} />
+        <Card label={t("scan.branch")} value={git.branch} />
+        <Card label={t("scan.commits")} value={git.commit_count.toLocaleString()} />
+        <Card label={t("scan.files")} value={structure.total_files.toLocaleString()} />
+        <Card label={t("scan.directories")} value={structure.total_directories.toLocaleString()} />
       </div>
 
-      <Section icon={Files} title="Languages">
+      <Section icon={Files} title={t("scan.languages")}>
         <LanguageBars languages={languages} />
       </Section>
 
-      <Section icon={Package} title={`Frameworks (${frameworks.length})`}>
+      <Section icon={Package} title={`${t("scan.frameworks")} (${frameworks.length})`}>
         {frameworks.length === 0 ? (
-          <p className="text-sm text-muted">No frameworks detected.</p>
+          <p className="text-sm text-muted">{t("scan.noFrameworks")}</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {frameworks.map((framework) => (
@@ -76,9 +78,9 @@ export function ScanReportView({ report }: ScanReportViewProps) {
         )}
       </Section>
 
-      <Section icon={Package} title={`Dependencies (${dependencies.length})`}>
+      <Section icon={Package} title={`${t("scan.dependencies")} (${dependencies.length})`}>
         {dependencies.length === 0 ? (
-          <p className="text-sm text-muted">No dependencies detected.</p>
+          <p className="text-sm text-muted">{t("scan.noDependencies")}</p>
         ) : (
           <ul className="flex max-h-64 flex-col gap-1 overflow-auto">
             {dependencies.map((dependency) => (
@@ -97,7 +99,7 @@ export function ScanReportView({ report }: ScanReportViewProps) {
         )}
       </Section>
 
-      <Section icon={FolderTree} title="Structure">
+      <Section icon={FolderTree} title={t("scan.structure")}>
         {structure.notable.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {structure.notable.map((dir) => (
@@ -111,12 +113,11 @@ export function ScanReportView({ report }: ScanReportViewProps) {
           </div>
         )}
         <p className="text-xs text-muted">
-          {structure.top_level_dirs.length} top-level director
-          {structure.top_level_dirs.length === 1 ? "y" : "ies"}
+          {t("scan.topLevelDirs", { count: structure.top_level_dirs.length })}
         </p>
       </Section>
 
-      <Section icon={GitBranch} title="Git">
+      <Section icon={GitBranch} title={t("scan.git")}>
         {git.last_commit && (
           <div className="flex items-start gap-2 text-sm">
             <GitCommitHorizontal size={16} strokeWidth={2} className="mt-0.5 shrink-0 text-muted" />
@@ -132,13 +133,13 @@ export function ScanReportView({ report }: ScanReportViewProps) {
           <div className="flex flex-col gap-1.5">
             <span className="flex items-center gap-1.5 text-xs font-medium text-muted">
               <Users size={13} strokeWidth={2} />
-              Top contributors
+              {t("scan.topContributors")}
             </span>
             {git.contributors.map((contributor) => (
               <div key={contributor.email} className="flex items-center gap-2 text-sm">
                 <span className="min-w-0 flex-1 truncate text-fg">{contributor.name}</span>
                 <span className="shrink-0 text-xs text-muted">
-                  {contributor.commit_count} commit{contributor.commit_count === 1 ? "" : "s"}
+                  {t("scan.commitsCount", { count: contributor.commit_count })}
                 </span>
               </div>
             ))}

@@ -2,6 +2,7 @@ import { GitBranch, GitCommitHorizontal, HardDrive, Files } from "lucide-react";
 
 import { formatBytes } from "@/shared/format";
 import type { ProjectMetadata } from "@/lib/ipc/repository";
+import { useT } from "@/lib/store/i18n";
 
 interface ProjectMetadataPanelProps {
   /** Metadata of the opened project. */
@@ -35,6 +36,7 @@ function Stat({
  */
 export function ProjectMetadataPanel({ metadata }: ProjectMetadataPanelProps) {
   const totalFiles = metadata.languages.reduce((sum, stat) => sum + stat.file_count, 0);
+  const t = useT();
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border bg-canvas p-4">
@@ -44,19 +46,19 @@ export function ProjectMetadataPanel({ metadata }: ProjectMetadataPanelProps) {
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <Stat icon={GitBranch} label="Branch" value={metadata.branch} />
+        <Stat icon={GitBranch} label={t("meta.branch")} value={metadata.branch} />
         <Stat
           icon={GitCommitHorizontal}
-          label="Commits"
+          label={t("meta.commits")}
           value={metadata.commit_count.toLocaleString()}
         />
-        <Stat icon={Files} label="Files" value={metadata.file_count.toLocaleString()} />
-        <Stat icon={HardDrive} label="Size" value={formatBytes(metadata.total_size_bytes)} />
+        <Stat icon={Files} label={t("meta.files")} value={metadata.file_count.toLocaleString()} />
+        <Stat icon={HardDrive} label={t("meta.size")} value={formatBytes(metadata.total_size_bytes)} />
       </div>
 
       {metadata.languages.length > 0 && (
         <div className="flex flex-col gap-2">
-          <span className="text-xs font-medium text-muted">Languages</span>
+          <span className="text-xs font-medium text-muted">{t("meta.languages")}</span>
           <div className="flex flex-col gap-1.5">
             {metadata.languages.map((stat) => {
               const percent = totalFiles > 0 ? (stat.file_count / totalFiles) * 100 : 0;

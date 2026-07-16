@@ -2,6 +2,7 @@ import { Clock, FolderGit2, X } from "lucide-react";
 
 import { formatRelativeTime } from "@/shared/format";
 import { useRepositoryStore } from "@/features/repository/store";
+import { useT } from "@/lib/store/i18n";
 
 /**
  * The recent-projects list. Each row reopens its project on click and can be
@@ -12,12 +13,13 @@ export function RecentProjectsList() {
   const reopen = useRepositoryStore((state) => state.reopen);
   const remove = useRepositoryStore((state) => state.remove);
   const busy = useRepositoryStore((state) => state.status !== "idle");
+  const t = useT();
 
   if (recent.length === 0) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-border p-8 text-center">
         <Clock size={22} strokeWidth={1.75} className="text-muted" />
-        <p className="text-sm text-muted">No recent projects yet.</p>
+        <p className="text-sm text-muted">{t("repo.noRecent")}</p>
       </div>
     );
   }
@@ -45,8 +47,8 @@ export function RecentProjectsList() {
             <button
               type="button"
               onClick={() => void remove(project.id)}
-              title="Remove from recent"
-              aria-label={`Remove ${project.name} from recent`}
+              title={t("repo.removeFromRecent")}
+              aria-label={t("repo.removeAria", { name: project.name })}
               className="shrink-0 rounded p-1 text-muted opacity-0 outline-none transition-opacity hover:bg-elevated hover:text-fg focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-accent group-hover:opacity-100"
             >
               <X size={14} strokeWidth={2} />

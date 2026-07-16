@@ -5,6 +5,7 @@ import type { SearchHit } from "@/lib/ipc/intel";
 import { useInsightsStore } from "@/features/insights/store";
 import { useChatStore } from "@/features/ai-chat/store";
 import { useNavigationStore } from "@/lib/store/navigation";
+import { useT } from "@/lib/store/i18n";
 
 /** A titled section with a leading icon and a count badge. */
 function Section({
@@ -18,6 +19,7 @@ function Section({
   count: number;
   children: React.ReactNode;
 }) {
+  const t = useT();
   return (
     <section className="flex flex-col gap-2 rounded-lg border border-border bg-canvas p-4">
       <h3 className="flex items-center gap-2 text-sm font-semibold text-fg">
@@ -27,7 +29,7 @@ function Section({
           {count}
         </span>
       </h3>
-      {count === 0 ? <p className="text-sm text-muted">None found.</p> : children}
+      {count === 0 ? <p className="text-sm text-muted">{t("common.noneFound")}</p> : children}
     </section>
   );
 }
@@ -49,6 +51,7 @@ export function InsightsView() {
   const analyze = useInsightsStore((state) => state.analyze);
   const setQuery = useInsightsStore((state) => state.setQuery);
   const search = useInsightsStore((state) => state.search);
+  const t = useT();
 
   const explain = (hit: SearchHit) => {
     if (!projectPath) {
@@ -65,7 +68,7 @@ export function InsightsView() {
       <section className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <Button icon={FolderOpen} onClick={() => void pickProject()}>
-            {projectPath ? "Change project" : "Choose project"}
+            {projectPath ? t("common.changeProject") : t("common.chooseProject")}
           </Button>
           {projectPath && (
             <span className="min-w-0 flex-1 truncate text-xs text-muted">{projectPath}</span>
@@ -76,7 +79,7 @@ export function InsightsView() {
             onClick={() => void analyze()}
             disabled={!projectPath || analyzing}
           >
-            {analyzing ? "Analyzing…" : "Analyze"}
+            {analyzing ? t("common.analyzing") : t("common.analyze")}
           </Button>
         </div>
 
@@ -92,12 +95,12 @@ export function InsightsView() {
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Where is authentication? Where is the database initialized?"
+              placeholder={t("insights.searchPlaceholder")}
               className="w-full bg-transparent text-sm text-fg outline-none placeholder:text-muted"
             />
           </div>
           <Button type="submit" disabled={!projectPath || searching}>
-            {searching ? "…" : "Search"}
+            {searching ? "…" : t("insights.search")}
           </Button>
         </form>
       </section>
@@ -111,7 +114,7 @@ export function InsightsView() {
 
       {hits.length > 0 && (
         <section className="flex flex-col gap-2 rounded-lg border border-border bg-canvas p-4">
-          <h3 className="text-sm font-semibold text-fg">Search results</h3>
+          <h3 className="text-sm font-semibold text-fg">{t("insights.searchResults")}</h3>
           <ul className="flex flex-col gap-1">
             {hits.map((hit, index) => (
               <li
@@ -129,7 +132,7 @@ export function InsightsView() {
                   onClick={() => explain(hit)}
                   className="shrink-0 rounded border border-border px-2 py-1 text-xs text-muted opacity-0 transition-opacity hover:bg-elevated hover:text-fg focus-visible:opacity-100 group-hover:opacity-100"
                 >
-                  Explain
+                  {t("insights.explain")}
                 </button>
               </li>
             ))}
@@ -141,7 +144,7 @@ export function InsightsView() {
         <div className="flex flex-col gap-4">
           <Section
             icon={Waypoints}
-            title="Cyclic dependencies"
+            title={t("insights.cyclicDependencies")}
             count={report.cyclic_dependencies.length}
           >
             <ul className="flex flex-col gap-1 text-sm text-fg">
@@ -153,7 +156,7 @@ export function InsightsView() {
             </ul>
           </Section>
 
-          <Section icon={Skull} title="Dead code" count={report.dead_code.length}>
+          <Section icon={Skull} title={t("insights.deadCode")} count={report.dead_code.length}>
             <ul className="flex flex-col gap-1 text-sm">
               {report.dead_code.map((symbol, index) => (
                 <li key={index} className="flex items-center gap-2">
@@ -166,12 +169,15 @@ export function InsightsView() {
             </ul>
           </Section>
 
-          <Section icon={Copy} title="Duplication" count={report.duplication.length}>
+          <Section icon={Copy} title={t("insights.duplication")} count={report.duplication.length}>
             <ul className="flex flex-col gap-2 text-sm">
               {report.duplication.map((group, index) => (
                 <li key={index} className="flex flex-col gap-0.5">
                   <span className="text-xs text-muted">
-                    {group.occurrences.length} copies · {group.line_count} lines
+                    {t("insights.duplicationSummary", {
+                      copies: group.occurrences.length,
+                      lines: group.line_count,
+                    })}
                   </span>
                   {group.occurrences.map((occurrence, occurrenceIndex) => (
                     <span key={occurrenceIndex} className="truncate text-xs text-fg">
@@ -190,10 +196,7 @@ export function InsightsView() {
           <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-surface text-muted">
             <Waypoints size={26} strokeWidth={1.75} />
           </div>
-          <p className="max-w-sm text-sm text-muted">
-            Choose a project and run Analyze to find cyclic dependencies, dead code and
-            duplication — or search to locate code.
-          </p>
+          <p className="max-w-sm text-sm text-muted">{t("insights.emptyHint")}</p>
         </div>
       )}
     </div>

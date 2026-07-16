@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 
 import type { ChatMessage } from "@/lib/ipc/chat";
 import { Markdown } from "@/features/ai-chat/components/Markdown";
+import { useT } from "@/lib/store/i18n";
 
 interface MessageListProps {
   /** Conversation messages, oldest first. */
@@ -16,6 +17,7 @@ interface MessageListProps {
  */
 export function MessageList({ messages, streaming }: MessageListProps) {
   const bottom = useRef<HTMLDivElement>(null);
+  const t = useT();
 
   useEffect(() => {
     bottom.current?.scrollIntoView({ block: "end" });
@@ -40,7 +42,7 @@ export function MessageList({ messages, streaming }: MessageListProps) {
               ) : message.content ? (
                 <Markdown content={message.content} />
               ) : (
-                streaming && isLast && <span className="text-sm text-muted">Thinking…</span>
+                streaming && isLast && <span className="text-sm text-muted">{t("chat.thinking")}</span>
               )}
             </div>
           </div>

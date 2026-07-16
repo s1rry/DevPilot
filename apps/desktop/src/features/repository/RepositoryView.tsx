@@ -6,6 +6,7 @@ import { ProjectMetadataPanel } from "@/features/repository/components/ProjectMe
 import { RecentProjectsList } from "@/features/repository/components/RecentProjectsList";
 import { useRepositoryStore } from "@/features/repository/store";
 import { isTauri } from "@/lib/ipc/env";
+import { useT } from "@/lib/store/i18n";
 
 /**
  * Repository Manager. Lets the user open a local folder or clone a remote
@@ -17,6 +18,7 @@ export function RepositoryView() {
   const metadata = useRepositoryStore((state) => state.metadata);
   const error = useRepositoryStore((state) => state.error);
   const loadRecent = useRepositoryStore((state) => state.loadRecent);
+  const t = useT();
 
   // Load the recent-projects list once when the view first mounts. Skipped
   // outside the desktop shell, where there is no backend to answer.
@@ -29,7 +31,7 @@ export function RepositoryView() {
   return (
     <div className="mx-auto flex h-full w-full max-w-3xl flex-col gap-6 p-6">
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-medium text-muted">Open a project</h2>
+        <h2 className="text-sm font-medium text-muted">{t("repo.openProject")}</h2>
         <OpenActions />
       </section>
 
@@ -43,7 +45,7 @@ export function RepositoryView() {
       {metadata && <ProjectMetadataPanel metadata={metadata} />}
 
       <section className="flex min-h-0 flex-col gap-3">
-        <h2 className="text-sm font-medium text-muted">Recent projects</h2>
+        <h2 className="text-sm font-medium text-muted">{t("repo.recentProjects")}</h2>
         <RecentProjectsList />
       </section>
     </div>

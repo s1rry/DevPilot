@@ -4,6 +4,7 @@ import { Button } from "@/shared/ui/Button";
 import { ChatInput } from "@/features/ai-chat/components/ChatInput";
 import { MessageList } from "@/features/ai-chat/components/MessageList";
 import { useChatStore } from "@/features/ai-chat/store";
+import { useT } from "@/lib/store/i18n";
 
 /**
  * AI Chat: a repository-aware conversation with the configured LLM provider.
@@ -18,19 +19,20 @@ export function AiChatView() {
   const pickProject = useChatStore((state) => state.pickProject);
   const send = useChatStore((state) => state.send);
   const clear = useChatStore((state) => state.clear);
+  const t = useT();
 
   return (
     <div className="flex h-full flex-col">
       <div className="flex shrink-0 items-center gap-3 border-b border-border px-4 py-2">
         <Button icon={FolderOpen} onClick={() => void pickProject()}>
-          {projectPath ? "Change project" : "Choose project"}
+          {projectPath ? t("chat.changeProject") : t("chat.chooseProject")}
         </Button>
         {projectPath && (
           <span className="min-w-0 flex-1 truncate text-xs text-muted">{projectPath}</span>
         )}
         {messages.length > 0 && (
           <Button icon={Trash2} onClick={clear}>
-            Clear
+            {t("chat.clear")}
           </Button>
         )}
       </div>
@@ -42,9 +44,7 @@ export function AiChatView() {
               <MessageSquare size={26} strokeWidth={1.75} />
             </div>
             <p className="max-w-sm text-sm text-muted">
-              {projectPath
-                ? "Ask a question about this repository. Replies stream in, with Markdown and code blocks."
-                : "Choose a project folder, then ask questions about its code."}
+              {projectPath ? t("chat.emptyWithProject") : t("chat.emptyNoProject")}
             </p>
           </div>
         ) : (
