@@ -20,8 +20,8 @@ function Stat({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2">
-      <Icon size={16} strokeWidth={2} className="shrink-0 text-muted" />
+    <div className="dp-card dp-card-interactive flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2">
+      <Icon size={16} strokeWidth={2} className="shrink-0 text-accent-strong" />
       <span className="min-w-0">
         <span className="block text-xs text-muted">{label}</span>
         <span className="block truncate text-sm text-fg">{value}</span>
@@ -39,7 +39,7 @@ export function ProjectMetadataPanel({ metadata }: ProjectMetadataPanelProps) {
   const t = useT();
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-border bg-canvas p-4">
+    <div className="dp-card flex flex-col gap-4 rounded-xl border border-border bg-surface p-4">
       <div className="min-w-0">
         <h3 className="truncate text-base font-semibold text-fg">{metadata.name}</h3>
         <p className="truncate text-xs text-muted">{metadata.local_path}</p>
@@ -66,7 +66,10 @@ export function ProjectMetadataPanel({ metadata }: ProjectMetadataPanelProps) {
                 <div key={stat.language} className="flex items-center gap-2">
                   <span className="w-24 shrink-0 truncate text-xs text-fg">{stat.language}</span>
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-elevated">
-                    <div className="h-full rounded-full bg-accent" style={{ width: `${percent}%` }} />
+                    <div
+                      className="dp-accent-surface h-full rounded-full"
+                      style={{ width: `${percent}%` }}
+                    />
                   </div>
                   <span className="w-10 shrink-0 text-right text-xs text-muted">
                     {stat.file_count}

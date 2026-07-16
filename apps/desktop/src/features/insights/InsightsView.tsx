@@ -21,9 +21,9 @@ function Section({
 }) {
   const t = useT();
   return (
-    <section className="flex flex-col gap-2 rounded-lg border border-border bg-canvas p-4">
+    <section className="dp-card flex flex-col gap-2 rounded-xl border border-border bg-surface p-4">
       <h3 className="flex items-center gap-2 text-sm font-semibold text-fg">
-        <Icon size={16} strokeWidth={2} className="text-muted" />
+        <Icon size={16} strokeWidth={2} className="text-accent-strong" />
         {title}
         <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted">
           {count}
@@ -114,13 +114,13 @@ export function InsightsView() {
       )}
 
       {hits.length > 0 && (
-        <section className="flex flex-col gap-2 rounded-lg border border-border bg-canvas p-4">
+        <section className="dp-card flex flex-col gap-2 rounded-xl border border-border bg-surface p-4">
           <h3 className="text-sm font-semibold text-fg">{t("insights.searchResults")}</h3>
           <ul className="flex flex-col gap-1">
             {hits.map((hit, index) => (
               <li
                 key={`${hit.path}-${hit.line}-${index}`}
-                className="group flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-surface"
+                className="dp-row group flex items-center gap-2 rounded-lg border border-transparent px-2 py-1.5 hover:border-border hover:bg-elevated"
               >
                 <span className="min-w-0 flex-1">
                   {hit.symbol && <span className="text-sm text-fg">{hit.symbol}</span>}
@@ -190,11 +190,11 @@ export function InsightsView() {
       )}
 
       {!report && !analyzing && hits.length === 0 && !error && (
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-surface text-muted">
-            <Waypoints size={26} strokeWidth={1.75} />
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
+          <div className="dp-empty-icon flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-elevated text-accent-strong">
+            <Waypoints size={28} strokeWidth={1.75} />
           </div>
-          <p className="max-w-sm text-sm text-muted">{t("insights.emptyHint")}</p>
+          <p className="max-w-sm text-sm leading-relaxed text-muted">{t("insights.emptyHint")}</p>
         </div>
       )}
     </div>

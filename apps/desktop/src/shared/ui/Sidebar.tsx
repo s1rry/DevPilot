@@ -39,11 +39,11 @@ export function Sidebar({ width, collapsed }: SidebarProps) {
             onClick={() => setActiveView(item.id)}
             title={collapsed ? label : undefined}
             aria-current={isActive ? "page" : undefined}
-            className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent ${
+            className={`flex items-center gap-3 rounded-md px-2.5 py-2 text-sm outline-none transition-all duration-200 focus-visible:ring-2 focus-visible:ring-accent ${
               collapsed ? "justify-center" : ""
             } ${
               isActive
-                ? "bg-accent text-accent-fg"
+                ? "dp-accent-surface dp-accent-glow text-accent-fg"
                 : "text-muted hover:bg-elevated hover:text-fg"
             }`}
           >

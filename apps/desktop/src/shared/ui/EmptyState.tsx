@@ -18,13 +18,13 @@ interface EmptyStateProps {
  */
 export function EmptyState({ icon: Icon, title, hint, phase }: EmptyStateProps) {
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-surface text-muted">
-        <Icon size={26} strokeWidth={1.75} />
+    <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
+      <div className="dp-empty-icon flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-elevated text-accent-strong">
+        <Icon size={28} strokeWidth={1.75} />
       </div>
-      <h2 className="text-lg font-semibold text-fg">{title}</h2>
-      <p className="max-w-sm text-sm text-muted">{hint}</p>
-      <span className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted">
+      <h2 className="text-lg font-semibold tracking-tight text-fg">{title}</h2>
+      <p className="max-w-sm text-sm leading-relaxed text-muted">{hint}</p>
+      <span className="rounded-full border border-border bg-surface px-2.5 py-0.5 text-xs font-medium text-muted">
         {phase}
       </span>
     </div>
