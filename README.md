@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="DevPilot — AI-powered repository analyzer" width="100%" />
+  <img src="docs/assets/banner.svg" alt="DevPilot — AI-анализатор репозиториев" width="100%" />
 </p>
 
 <p align="center">
@@ -7,26 +7,56 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT" /></a>
   <img src="https://img.shields.io/badge/Tauri-2-24C8DB.svg" alt="Tauri 2" />
   <img src="https://img.shields.io/badge/Rust-stable-orange.svg" alt="Rust" />
+  <img src="https://img.shields.io/badge/язык-RU%20%2F%20EN-6366f1.svg" alt="RU / EN" />
 </p>
 
-**DevPilot** is a desktop app that helps you understand any codebase — open a repository and explore its structure, dependencies and quality, then ask an AI questions about the code. It runs on Windows, macOS and Linux, and works fully offline with a local model.
+**DevPilot** — десктоп-приложение, которое помогает понять любую кодовую базу. Откройте репозиторий, изучите его структуру, зависимости и качество кода, постройте интерактивные графы архитектуры — и задайте вопросы о коде обычным языком через AI-чат. Работает на Windows, macOS и Linux, а с локальной моделью (Ollama) — полностью офлайн, без единого запроса в облако.
 
-> **Status:** actively developed in the open. Build it from source today (see [Getting started](#getting-started)); packaged releases are on the way.
+Интерфейс двуязычный: **русский и английский**, переключается одной кнопкой в верхней панели. По умолчанию — русский.
 
-## Features
+> **Статус:** активная открытая разработка. Уже сейчас можно собрать из исходников (см. [Установка из исходников](#установка-из-исходников)). Готовые установщики в один клик — на подходе.
 
-- **Repository Manager** — open a local folder or clone a GitHub repo; recent projects; branch, commit and language metadata.
-- **Repository Scanner** — detects languages, frameworks and dependencies (npm, Cargo, PyPI, Go), folder structure and git contributors.
-- **AST analyzer** — tree-sitter parsing of Rust and TypeScript/JavaScript into a structural model (functions, classes, interfaces, imports, exports).
-- **Architecture graphs** — interactive dependency, module, folder and call graphs with pan, zoom and drag.
-- **AI Chat** — repository-aware, streaming chat about your code with **Ollama** (local, no key), **Claude**, **OpenAI** or **Gemini**. Markdown and highlighted code blocks.
-- **Code Intelligence** — find cyclic dependencies, dead code and duplication, and search "where is authentication?" across symbols and paths.
+## Содержание
 
-All analysis is deterministic and local; the AI is optional and provider-agnostic. API keys stay on your machine.
+- [Возможности](#возможности)
+- [Установка в один клик](#установка-в-один-клик)
+- [Установка из исходников](#установка-из-исходников)
+- [Как пользоваться](#как-пользоваться)
+- [Настройка AI](#настройка-ai)
+- [Архитектура](#архитектура)
+- [Как помочь проекту](#как-помочь-проекту)
+- [Лицензия](#лицензия)
 
-## Getting started
+## Возможности
 
-Prerequisites: [Rust (stable)](https://rustup.rs), [Node.js 20+](https://nodejs.org), [pnpm](https://pnpm.io), and the [Tauri system dependencies](https://tauri.app/start/prerequisites/) for your OS.
+- **Менеджер репозиториев** — откройте локальную папку или склонируйте репозиторий с GitHub по ссылке. Список недавних проектов, метаданные: ветка, число коммитов, размер, разбивка по языкам.
+- **Сканер репозитория** — определяет языки, фреймворки и зависимости (npm, Cargo, PyPI, Go), структуру папок и контрибьюторов из истории git.
+- **AST-анализатор** — разбор Rust и TypeScript/JavaScript через tree-sitter в структурную модель: функции, классы, интерфейсы, импорты и экспорты.
+- **Графы архитектуры** — интерактивные графы зависимостей, модулей, папок и вызовов. Панорама, зум, перетаскивание узлов.
+- **AI-чат** — разговор о вашем коде с потоковыми ответами: **Ollama** (локально, без ключа), **Claude**, **OpenAI** или **Gemini**. Markdown и подсветка блоков кода.
+- **Инсайты (Code Intelligence)** — поиск циклических зависимостей, мёртвого кода и дублирования, а также поиск по коду («где аутентификация?») по символам и путям с передачей найденного в AI-чат для объяснения.
+
+Весь анализ **детерминированный и локальный**; AI подключается по желанию и не привязан к одному провайдеру. **API-ключи хранятся только на вашей машине.**
+
+## Установка в один клик
+
+> Готовые установщики выпускаются на странице [**Releases**](https://github.com/s1rry/devpilot/releases). Раздел готовится — до первого релиза используйте [установку из исходников](#установка-из-исходников).
+
+Когда релизы появятся, установка будет такой:
+
+| ОС | Файл | Как поставить |
+|---|---|---|
+| **Windows** | `DevPilot_*_x64-setup.exe` (или `.msi`) | Скачать, запустить, «Далее» — готово. |
+| **macOS** | `DevPilot_*_universal.dmg` | Открыть образ, перетащить DevPilot в «Программы». |
+| **Linux** | `DevPilot_*_amd64.AppImage` | Сделать исполняемым (`chmod +x`) и запустить. Также будут `.deb`. |
+
+Приложение не требует прав администратора и работает автономно.
+
+## Установка из исходников
+
+Это рабочий способ на сегодня.
+
+**Что нужно заранее:** [Rust (stable)](https://rustup.rs), [Node.js 20+](https://nodejs.org), [pnpm](https://pnpm.io) и [системные зависимости Tauri](https://tauri.app/start/prerequisites/) для вашей ОС.
 
 ```sh
 git clone https://github.com/s1rry/devpilot.git
@@ -35,29 +65,59 @@ pnpm install
 pnpm tauri dev
 ```
 
-To use AI Chat, open **Settings** and pick a provider. **Ollama** works locally with no API key — install [Ollama](https://ollama.com) and pull a model (e.g. `ollama pull llama3`). For Claude, OpenAI or Gemini, paste your API key.
+Первый запуск компилирует Rust-часть — это занимает несколько минут. Дальше приложение открывается своим окном.
 
-## Architecture
+Чтобы собрать установщик под свою ОС локально:
 
-A Cargo workspace following Clean Architecture: every dependency points inward to `devpilot-core`, which defines the domain and the ports (traits) that adapter crates implement. See [ADR-0001](docs/adr/0001-clean-architecture-workspace.md).
+```sh
+pnpm tauri build
+```
 
-| Path | Purpose |
+Готовый пакет появится в `apps/desktop/src-tauri/target/release/bundle/`.
+
+## Как пользоваться
+
+Интерфейс — боковая панель слева (шесть разделов), верхняя панель с переключателями темы и языка, статус-строка снизу.
+
+1. **Репозиторий.** Нажмите **«Открыть папку»** и выберите проект, либо вставьте ссылку на GitHub и нажмите **«Клонировать»**. Появятся метаданные проекта, а сам он сохранится в списке недавних.
+2. **Анализ.** Нажмите **«Сканировать папку»** — DevPilot определит языки, фреймворки, зависимости, структуру и историю git и покажет наглядный отчёт.
+3. **Архитектура.** Выберите проект и нажмите **«Анализировать»**. Переключайтесь между графами (Зависимости / Модули / Папки / Вызовы). Узлы можно тянуть, колесо мыши — зум, перетаскивание фона — панорама.
+4. **AI-чат.** Выберите проект, задайте вопрос о коде. Ответ приходит потоком, с Markdown и подсветкой кода. Провайдер и модель настраиваются в разделе «Настройки».
+5. **Инсайты.** Нажмите **«Анализировать»**, чтобы найти циклические зависимости, мёртвый код и дублирование. Строка поиска отвечает на вопросы вроде «где инициализируется база данных?»; у каждого результата есть кнопка **«Объяснить»** — она передаёт символ в AI-чат.
+6. **Настройки.** Выбор AI-провайдера, модели и ввод API-ключа (см. ниже).
+
+Тема (тёмная/светлая) и язык (RU/EN) переключаются кнопками в верхней панели и запоминаются между запусками.
+
+## Настройка AI
+
+Откройте **«Настройки»** и выберите провайдера:
+
+- **Ollama** — локально, **без API-ключа**. Установите [Ollama](https://ollama.com) и загрузите модель, например `ollama pull llama3`. Полностью офлайн, ничего не уходит в облако.
+- **Claude**, **OpenAI**, **Gemini** — вставьте свой API-ключ в поле настроек. Ключ хранится локально в папке данных приложения и **никогда не показывается в логах** (маскируется в отладочном выводе).
+
+Укажите имя модели (например `llama3`, `claude-sonnet-4`, `gpt-4o`) и сохраните. После этого AI-чат готов к работе.
+
+## Архитектура
+
+Cargo-workspace по принципам Clean Architecture: все зависимости направлены внутрь, к `devpilot-core`, который описывает домен и порты (трейты), а крейты-адаптеры их реализуют. Подробнее — [ADR-0001](docs/adr/0001-clean-architecture-workspace.md).
+
+| Путь | Назначение |
 |---|---|
-| `crates/devpilot-core` | Domain: entities, ports, use cases, pure detectors (graphs, code intelligence). |
-| `crates/devpilot-git` | Repository reading via libgit2: open, clone, tree, history, churn. |
-| `crates/devpilot-analysis` | tree-sitter parsing into the AST model. |
-| `crates/devpilot-scan` | Manifest detection: languages, frameworks, dependencies. |
-| `crates/devpilot-ai` | LLM provider adapters (Ollama, Claude, OpenAI, Gemini). |
-| `crates/devpilot-storage` | Local JSON persistence (recent projects, settings). |
-| `crates/devpilot-testing` | Shared mocks and fixtures. |
-| `apps/desktop` | Tauri shell (composition root) + React/TypeScript/Tailwind UI. |
+| `crates/devpilot-core` | Домен: сущности, порты, use-cases, чистые детекторы (графы, code intelligence). |
+| `crates/devpilot-git` | Чтение репозитория через libgit2: открытие, клон, дерево файлов, история, churn. |
+| `crates/devpilot-analysis` | Разбор кода в AST-модель через tree-sitter. |
+| `crates/devpilot-scan` | Детекторы манифестов: языки, фреймворки, зависимости. |
+| `crates/devpilot-ai` | Адаптеры LLM-провайдеров (Ollama, Claude, OpenAI, Gemini). |
+| `crates/devpilot-storage` | Локальное хранение в JSON (недавние проекты, настройки). |
+| `crates/devpilot-testing` | Общие моки и фикстуры. |
+| `apps/desktop` | Оболочка Tauri (composition root) + UI на React/TypeScript/Tailwind. |
 
-More: [docs/architecture.md](docs/architecture.md) · Decisions: [docs/adr](docs/adr) · Changes: [CHANGELOG.md](CHANGELOG.md).
+Ещё: [docs/architecture.md](docs/architecture.md) · Решения: [docs/adr](docs/adr) · Изменения: [CHANGELOG.md](CHANGELOG.md).
 
-## Contributing
+## Как помочь проекту
 
-Contributions are welcome — the project is young, which is the best time to shape it. Start with [CONTRIBUTING.md](CONTRIBUTING.md): it maps the codebase and shows how to add a provider, a language or a feature slice.
+Контрибьюции приветствуются — проект молодой, и это лучшее время, чтобы влиять на его развитие. Начните с [CONTRIBUTING.md](CONTRIBUTING.md): там карта кодовой базы и примеры, как добавить провайдера, язык или новый срез функциональности.
 
-## License
+## Лицензия
 
 [MIT](LICENSE)
