@@ -1,0 +1,87 @@
+name: Release
+
+# Builds signed-less desktop installers for every OS and attaches them to a
+# GitHub Release. Triggered by pushing a version tag like `v0.2.3`, or manually.
+#
+# One-click install for users: they grab the installer for their OS from the
+# Releases page. Publishing a release:
+#   1. bump the version in apps/desktop/src-tauri/tauri.conf.json (+ package.json)
+#   2. git tag v0.2.3 && git push origin v0.2.3
+# The workflow then creates a *draft* release with all bundles; review and
+# publish it from the GitHub UI.
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build (${{ matrix.platform.name }})
+    runs-on: ${{ matrix.platform.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - name: macOS (universal)
+            os: macos-latest
+            args: "--target universal-apple-darwin"
+            rust-targets: "aarch64-apple-darwin,x86_64-apple-darwin"
+          - name: Linux
+            os: ubuntu-22.04
+            args: ""
+            rust-targets: ""
+          - name: Windows
+            os: windows-latest
+            args: ""
+            rust-targets: ""
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Tauri system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl \
+            wget file libxdo-dev libssl-dev libayatana-appindicator3-dev \
+            librsvg2-dev
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform.rust-targets }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/src-tauri
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: apps/desktop/pnpm-lock.yaml
+
+      - name: Install frontend dependencies
+        working-directory: apps/desktop
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: apps/desktop
+          tagName: ${{ github.ref_name }}
+          releaseName: "DevPilot ${{ github.ref_name }}"
+          releaseBody: "Установщики DevPilot. Скачайте файл для своей ОС ниже. См. README для инструкций."
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.platform.args }}
