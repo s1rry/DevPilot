@@ -31,9 +31,14 @@ describe("dictionaries", () => {
     }
   });
 
-  it("have no empty translations", () => {
-    for (const key of Object.keys(ru) as (keyof typeof ru)[]) {
-      expect(ru[key].trim().length, `empty translation for "${key}"`).toBeGreaterThan(0);
+  it("have no empty translations in either language", () => {
+    for (const [lang, dict] of [
+      ["en", en],
+      ["ru", ru],
+    ] as const) {
+      for (const key of Object.keys(dict) as (keyof typeof dict)[]) {
+        expect(dict[key].trim().length, `empty ${lang} translation for "${key}"`).toBeGreaterThan(0);
+      }
     }
   });
 });
@@ -63,10 +68,12 @@ describe("plural", () => {
     expect(plural("en", "commits", 5)).toBe("5 commits");
   });
 
-  it("uses Russian one/few/many forms", () => {
+  it("uses Russian one/few/many forms, including boundary numbers", () => {
+    expect(plural("ru", "commits", 0)).toBe("0 коммитов");
     expect(plural("ru", "commits", 1)).toBe("1 коммит");
     expect(plural("ru", "commits", 2)).toBe("2 коммита");
     expect(plural("ru", "commits", 5)).toBe("5 коммитов");
+    expect(plural("ru", "commits", 11)).toBe("11 коммитов");
     expect(plural("ru", "commits", 21)).toBe("21 коммит");
   });
 
