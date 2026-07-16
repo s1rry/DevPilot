@@ -3,7 +3,7 @@ import { Files, FolderTree, GitBranch, GitCommitHorizontal, Package, Users } fro
 import { formatRelativeTime } from "@/shared/format";
 import type { ScanReport } from "@/lib/ipc/scan";
 import { LanguageBars } from "@/features/analysis/components/LanguageBars";
-import { useT } from "@/lib/store/i18n";
+import { useT, useTn } from "@/lib/store/i18n";
 
 /** A titled section with a leading icon. */
 function Section({
@@ -45,6 +45,7 @@ interface ScanReportViewProps {
 export function ScanReportView({ report }: ScanReportViewProps) {
   const { git, structure, frameworks, dependencies, languages } = report;
   const t = useT();
+  const tn = useTn();
 
   return (
     <div className="flex flex-col gap-4">
@@ -139,7 +140,7 @@ export function ScanReportView({ report }: ScanReportViewProps) {
               <div key={contributor.email} className="flex items-center gap-2 text-sm">
                 <span className="min-w-0 flex-1 truncate text-fg">{contributor.name}</span>
                 <span className="shrink-0 text-xs text-muted">
-                  {t("scan.commitsCount", { count: contributor.commit_count })}
+                  {tn("commits", contributor.commit_count)}
                 </span>
               </div>
             ))}

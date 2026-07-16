@@ -3,6 +3,8 @@ import { persist } from "zustand/middleware";
 
 import { en, type Dictionary, type TranslationKey } from "@/lib/i18n/en";
 import { ru } from "@/lib/i18n/ru";
+import { interpolate, type TranslationParams } from "@/lib/i18n/interpolate";
+import { plural, type PluralKey } from "@/lib/i18n/plurals";
 
 /** Supported interface languages. */
 export type Language = "ru" | "en";
@@ -56,19 +58,6 @@ export const useI18nStore = create<I18nState>()(
   ),
 );
 
-/** Named substitution values for a translated string, e.g. `{ count: 3 }`. */
-export type TranslationParams = Record<string, string | number>;
-
-/** Replaces `{name}` placeholders in a template with the given values. */
-function interpolate(template: string, params?: TranslationParams): string {
-  if (!params) {
-    return template;
-  }
-  return template.replace(/\{(\w+)\}/g, (match, name: string) =>
-    name in params ? String(params[name]) : match,
-  );
-}
-
 /**
  * Returns a translation function `t(key, params?)` bound to the active
  * language.
@@ -84,4 +73,16 @@ export function useT(): (key: TranslationKey, params?: TranslationParams) => str
   const dictionary = DICTIONARIES[language] ?? en;
   return (key: TranslationKey, params?: TranslationParams) =>
     interpolate(dictionary[key] ?? en[key], params);
+}
+
+/**
+ * Returns a plural function `tn(key, count)` bound to the active language.
+ *
+ * Picks the grammatically correct form for `count` (e.g. Russian
+ * one/few/many) via `Intl.PluralRules`. Use for count-based strings:
+ * `const tn = useTn(); ... tn("commits", n)`.
+ */
+export function useTn(): (key: PluralKey, count: number) => string {
+  const language = useI18nStore((state) => state.language);
+  return (key: PluralKey, count: number) => plural(language, key, count);
 }
