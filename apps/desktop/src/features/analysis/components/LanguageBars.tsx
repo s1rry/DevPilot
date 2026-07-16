@@ -1,4 +1,5 @@
 import type { LanguageStat } from "@/lib/ipc/repository";
+import { useT } from "@/lib/store/i18n";
 
 interface LanguageBarsProps {
   /** Per-language file counts. */
@@ -7,9 +8,10 @@ interface LanguageBarsProps {
 
 /** A horizontal bar chart of file counts per language. */
 export function LanguageBars({ languages }: LanguageBarsProps) {
+  const t = useT();
   const total = languages.reduce((sum, stat) => sum + stat.file_count, 0);
   if (total === 0) {
-    return <p className="text-sm text-muted">No files detected.</p>;
+    return <p className="text-sm text-muted">{t("scan.noFiles")}</p>;
   }
 
   return (

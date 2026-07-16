@@ -3,6 +3,7 @@ import { AlertCircle, Loader2, ScanSearch } from "lucide-react";
 import { Button } from "@/shared/ui/Button";
 import { ScanReportView } from "@/features/analysis/components/ScanReportView";
 import { useAnalysisStore } from "@/features/analysis/store";
+import { useT } from "@/lib/store/i18n";
 
 /**
  * Repository Scanner view. Scans a chosen project folder and reports its
@@ -15,6 +16,7 @@ export function AnalysisView() {
   const scannedPath = useAnalysisStore((state) => state.scannedPath);
   const error = useAnalysisStore((state) => state.error);
   const scanDialog = useAnalysisStore((state) => state.scanDialog);
+  const t = useT();
 
   const scanning = status === "scanning";
 
@@ -28,7 +30,7 @@ export function AnalysisView() {
             onClick={() => void scanDialog()}
             disabled={scanning}
           >
-            {scanning ? "Scanning…" : "Scan a folder"}
+            {scanning ? t("scan.scanning") : t("scan.scanFolder")}
           </Button>
           {scannedPath && !scanning && (
             <span className="min-w-0 truncate text-xs text-muted">{scannedPath}</span>
@@ -51,10 +53,7 @@ export function AnalysisView() {
             <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-surface text-muted">
               <ScanSearch size={26} strokeWidth={1.75} />
             </div>
-            <p className="max-w-sm text-sm text-muted">
-              Scan a project folder to detect its languages, frameworks, dependencies, structure and
-              git history.
-            </p>
+            <p className="max-w-sm text-sm text-muted">{t("scan.emptyHint")}</p>
           </div>
         )
       )}

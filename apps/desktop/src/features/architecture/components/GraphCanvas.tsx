@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { Graph, NodeKind } from "@/lib/ipc/architecture";
 import { computeLayout, MAX_LAYOUT_NODES, type Position } from "@/features/architecture/layout";
+import { useT } from "@/lib/store/i18n";
 
 /** Fill color per node kind. */
 const NODE_COLOR: Record<NodeKind, string> = {
@@ -30,6 +31,7 @@ interface GraphCanvasProps {
  * Labels show for small graphs; every node has a hover tooltip.
  */
 export function GraphCanvas({ graph }: GraphCanvasProps) {
+  const t = useT();
   const layout = useMemo(() => computeLayout(graph), [graph]);
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -110,7 +112,7 @@ export function GraphCanvas({ graph }: GraphCanvasProps) {
   if (graph.nodes.length === 0) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted">
-        This graph is empty.
+        {t("arch.graphEmpty")}
       </div>
     );
   }
@@ -119,7 +121,7 @@ export function GraphCanvas({ graph }: GraphCanvasProps) {
     <div className="relative h-full w-full">
       {graph.nodes.length > MAX_LAYOUT_NODES && (
         <span className="absolute left-2 top-2 z-10 rounded bg-surface/80 px-2 py-1 text-xs text-muted">
-          Showing the {MAX_LAYOUT_NODES} most connected of {graph.nodes.length} nodes
+          {t("arch.nodesLimited", { max: MAX_LAYOUT_NODES, total: graph.nodes.length })}
         </span>
       )}
       <svg

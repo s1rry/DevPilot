@@ -3,22 +3,24 @@ import { AlertCircle, FolderOpen, Loader2, Network } from "lucide-react";
 import { Button } from "@/shared/ui/Button";
 import { GraphCanvas } from "@/features/architecture/components/GraphCanvas";
 import { graphOf, useArchitectureStore, type GraphKind } from "@/features/architecture/store";
+import type { TranslationKey } from "@/lib/i18n/en";
+import { useT } from "@/lib/store/i18n";
 
-/** The selectable graphs, in tab order. */
-const GRAPHS: { kind: GraphKind; label: string }[] = [
-  { kind: "dependency", label: "Dependencies" },
-  { kind: "module", label: "Modules" },
-  { kind: "folder", label: "Folders" },
-  { kind: "call", label: "Calls" },
+/** The selectable graphs, in tab order. Labels are translation keys. */
+const GRAPHS: { kind: GraphKind; label: TranslationKey }[] = [
+  { kind: "dependency", label: "arch.graph.dependency" },
+  { kind: "module", label: "arch.graph.module" },
+  { kind: "folder", label: "arch.graph.folder" },
+  { kind: "call", label: "arch.graph.call" },
 ];
 
 /** Legend entries: node kind and color, matching `GraphCanvas`. */
-const LEGEND: { label: string; color: string }[] = [
-  { label: "File", color: "#6366f1" },
-  { label: "Module", color: "#a855f7" },
-  { label: "Directory", color: "#64748b" },
-  { label: "Function", color: "#22c55e" },
-  { label: "External", color: "#475569" },
+const LEGEND: { label: TranslationKey; color: string }[] = [
+  { label: "arch.legend.file", color: "#6366f1" },
+  { label: "arch.legend.module", color: "#a855f7" },
+  { label: "arch.legend.directory", color: "#64748b" },
+  { label: "arch.legend.function", color: "#22c55e" },
+  { label: "arch.legend.external", color: "#475569" },
 ];
 
 /**
@@ -34,6 +36,7 @@ export function ArchitectureView() {
   const pickProject = useArchitectureStore((state) => state.pickProject);
   const analyze = useArchitectureStore((state) => state.analyze);
   const setGraph = useArchitectureStore((state) => state.setGraph);
+  const t = useT();
 
   const graph = model ? graphOf(model, activeGraph) : null;
 
@@ -41,7 +44,7 @@ export function ArchitectureView() {
     <div className="flex h-full flex-col">
       <div className="flex shrink-0 flex-wrap items-center gap-3 border-b border-border px-4 py-2">
         <Button icon={FolderOpen} onClick={() => void pickProject()}>
-          {projectPath ? "Change project" : "Choose project"}
+          {projectPath ? t("common.changeProject") : t("common.chooseProject")}
         </Button>
         {projectPath && (
           <span className="min-w-0 flex-1 truncate text-xs text-muted">{projectPath}</span>
@@ -52,7 +55,7 @@ export function ArchitectureView() {
           onClick={() => void analyze()}
           disabled={!projectPath || analyzing}
         >
-          {analyzing ? "Analyzing…" : "Analyze"}
+          {analyzing ? t("common.analyzing") : t("common.analyze")}
         </Button>
       </div>
 
@@ -73,7 +76,7 @@ export function ArchitectureView() {
                       : "text-muted hover:bg-elevated hover:text-fg"
                   }`}
                 >
-                  {label} <span className="opacity-70">{count}</span>
+                  {t(label)} <span className="opacity-70">{count}</span>
                 </button>
               );
             })}
@@ -85,7 +88,7 @@ export function ArchitectureView() {
                   className="inline-block h-2.5 w-2.5 rounded-full"
                   style={{ backgroundColor: entry.color }}
                 />
-                {entry.label}
+                {t(entry.label)}
               </span>
             ))}
           </div>
@@ -108,10 +111,7 @@ export function ArchitectureView() {
               <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-border bg-surface text-muted">
                 <Network size={26} strokeWidth={1.75} />
               </div>
-              <p className="max-w-sm text-sm text-muted">
-                Choose a project and run Analyze to see its dependency, module, folder and call
-                graphs. Drag nodes, scroll to zoom, drag the background to pan.
-              </p>
+              <p className="max-w-sm text-sm text-muted">{t("arch.emptyHint")}</p>
             </div>
           )
         )}

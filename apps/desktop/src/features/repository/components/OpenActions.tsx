@@ -3,6 +3,7 @@ import { FolderOpen, Github, Loader2 } from "lucide-react";
 
 import { Button } from "@/shared/ui/Button";
 import { useRepositoryStore } from "@/features/repository/store";
+import { useT } from "@/lib/store/i18n";
 
 /**
  * The primary actions of the Repository Manager: open a local folder via the
@@ -12,6 +13,7 @@ export function OpenActions() {
   const status = useRepositoryStore((state) => state.status);
   const openFolderDialog = useRepositoryStore((state) => state.openFolderDialog);
   const clone = useRepositoryStore((state) => state.clone);
+  const t = useT();
   const [url, setUrl] = useState("");
 
   const busy = status !== "idle";
@@ -32,7 +34,7 @@ export function OpenActions() {
         onClick={() => void openFolderDialog()}
         disabled={busy}
       >
-        Open folder
+        {t("repo.openFolder")}
       </Button>
 
       <form onSubmit={submitClone} className="flex gap-2">
@@ -41,7 +43,7 @@ export function OpenActions() {
           <input
             value={url}
             onChange={(event) => setUrl(event.target.value)}
-            placeholder="https://github.com/owner/repo"
+            placeholder={t("repo.cloneUrlPlaceholder")}
             disabled={busy}
             className="w-full bg-transparent text-sm text-fg outline-none placeholder:text-muted disabled:cursor-not-allowed"
           />
@@ -51,7 +53,7 @@ export function OpenActions() {
           icon={status === "cloning" ? Loader2 : undefined}
           disabled={!canClone}
         >
-          {status === "cloning" ? "Cloning…" : "Clone"}
+          {status === "cloning" ? t("repo.cloning") : t("repo.clone")}
         </Button>
       </form>
     </div>

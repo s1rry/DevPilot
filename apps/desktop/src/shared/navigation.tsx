@@ -1,18 +1,19 @@
 import { BarChart3, FolderGit2, Lightbulb, MessageSquare, Network, Settings } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import type { TranslationKey } from "@/lib/i18n/en";
 import type { ViewId } from "@/lib/store/navigation";
 
 /** A primary navigation entry shown in the sidebar. */
 export interface NavItem {
   /** Stable view identifier. */
   id: ViewId;
-  /** Label shown in the sidebar and content header. */
-  label: string;
+  /** Translation key for the label shown in the sidebar and content header. */
+  label: TranslationKey;
   /** Icon rendered in the sidebar rail. */
   icon: LucideIcon;
-  /** One-line description shown in the empty state of the view. */
-  hint: string;
+  /** Translation key for the one-line hint shown in the view's empty state. */
+  hint: TranslationKey;
   /** Roadmap phase that will fill this view with real functionality. */
   phase: string;
 }
@@ -24,44 +25,44 @@ export interface NavItem {
 export const NAV_ITEMS: readonly NavItem[] = [
   {
     id: "repository",
-    label: "Repository",
+    label: "nav.repository.label",
     icon: FolderGit2,
-    hint: "Open a local folder or a GitHub URL to explore its file tree.",
+    hint: "nav.repository.hint",
     phase: "Phase 2",
   },
   {
     id: "analysis",
-    label: "Analysis",
+    label: "nav.analysis.label",
     icon: BarChart3,
-    hint: "Code metrics, complexity and structure from tree-sitter.",
+    hint: "nav.analysis.hint",
     phase: "Phase 2",
   },
   {
     id: "architecture",
-    label: "Architecture",
+    label: "nav.architecture.label",
     icon: Network,
-    hint: "Interactive dependency, module, folder and call graphs.",
+    hint: "nav.architecture.hint",
     phase: "Phase 5",
   },
   {
     id: "ai-chat",
-    label: "AI Chat",
+    label: "nav.ai-chat.label",
     icon: MessageSquare,
-    hint: "Ask questions about the codebase with Ollama, Claude, OpenAI or Gemini.",
+    hint: "nav.ai-chat.hint",
     phase: "Phase 4",
   },
   {
     id: "insights",
-    label: "Insights",
+    label: "nav.insights.label",
     icon: Lightbulb,
-    hint: "Reports on hotspots, risks and code quality trends.",
+    hint: "nav.insights.hint",
     phase: "Phase 5",
   },
   {
     id: "settings",
-    label: "Settings",
+    label: "nav.settings.label",
     icon: Settings,
-    hint: "AI providers, API keys and appearance.",
+    hint: "nav.settings.hint",
     phase: "Phase 3",
   },
 ];

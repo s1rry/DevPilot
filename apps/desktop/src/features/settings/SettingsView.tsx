@@ -5,6 +5,7 @@ import { Button } from "@/shared/ui/Button";
 import { PROVIDERS, needsApiKey } from "@/lib/ipc/settings";
 import { isTauri } from "@/lib/ipc/env";
 import { useSettingsStore } from "@/features/settings/store";
+import { useT } from "@/lib/store/i18n";
 
 /**
  * Provider settings: pick the active LLM provider and model, and enter API
@@ -19,6 +20,7 @@ export function SettingsView() {
   const update = useSettingsStore((state) => state.update);
   const setKey = useSettingsStore((state) => state.setKey);
   const save = useSettingsStore((state) => state.save);
+  const t = useT();
 
   useEffect(() => {
     if (isTauri()) {
@@ -29,7 +31,7 @@ export function SettingsView() {
   if (!settings) {
     return (
       <div className="mx-auto flex h-full w-full max-w-xl flex-col gap-6 p-6">
-        <p className="text-sm text-muted">Loading settings…</p>
+        <p className="text-sm text-muted">{t("settings.loading")}</p>
       </div>
     );
   }
@@ -39,10 +41,10 @@ export function SettingsView() {
   return (
     <div className="mx-auto flex h-full w-full max-w-xl flex-col gap-6 p-6">
       <section className="flex flex-col gap-4">
-        <h2 className="text-sm font-medium text-muted">AI provider</h2>
+        <h2 className="text-sm font-medium text-muted">{t("settings.aiProvider")}</h2>
 
         <label className="flex flex-col gap-1.5">
-          <span className="text-xs text-muted">Provider</span>
+          <span className="text-xs text-muted">{t("settings.provider")}</span>
           <select
             value={settings.provider}
             onChange={(event) => update({ provider: event.target.value as never })}
@@ -57,39 +59,39 @@ export function SettingsView() {
         </label>
 
         <label className="flex flex-col gap-1.5">
-          <span className="text-xs text-muted">Model</span>
+          <span className="text-xs text-muted">{t("settings.model")}</span>
           <input
             value={settings.model}
             onChange={(event) => update({ model: event.target.value })}
-            placeholder="e.g. llama3, claude-sonnet-4, gpt-4o"
+            placeholder={t("settings.modelPlaceholder")}
             className="h-9 rounded-md border border-border bg-canvas px-3 text-sm text-fg outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-accent"
           />
         </label>
 
         {requiresKey && (
           <label className="flex flex-col gap-1.5">
-            <span className="text-xs text-muted">{settings.provider} API key</span>
+            <span className="text-xs text-muted">
+              {t("settings.apiKeyLabel", { provider: settings.provider })}
+            </span>
             <input
               type="password"
               value={settings.api_keys[settings.provider] ?? ""}
               onChange={(event) => setKey(settings.provider, event.target.value)}
-              placeholder="Paste your API key"
+              placeholder={t("settings.apiKeyPlaceholder")}
               className="h-9 rounded-md border border-border bg-canvas px-3 text-sm text-fg outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-accent"
             />
-            <span className="text-xs text-muted">
-              Stored locally in your app data folder.
-            </span>
+            <span className="text-xs text-muted">{t("settings.apiKeyStored")}</span>
           </label>
         )}
 
         <div className="flex items-center gap-3">
           <Button variant="primary" onClick={() => void save()} disabled={saving}>
-            {saving ? "Saving…" : "Save"}
+            {saving ? t("settings.saving") : t("settings.save")}
           </Button>
           {savedAt && !saving && (
             <span className="flex items-center gap-1 text-xs text-muted">
               <Check size={14} strokeWidth={2} className="text-accent" />
-              Saved
+              {t("settings.saved")}
             </span>
           )}
         </div>
