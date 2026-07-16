@@ -119,6 +119,12 @@ body,
   background-image: var(--canvas-glow);
 }
 
+/*
+ * Radius scale — keep new components on it so the visual language stays
+ * consistent: buttons and small tabs use `rounded-md`, cards and raised
+ * surfaces use `rounded-lg`/`rounded-xl`, empty-state icons use `rounded-2xl`.
+ */
+
 /* A raised card: soft shadow, top sheen, gentle hover lift + brighter border. */
 .dp-card {
   position: relative;
@@ -178,7 +184,8 @@ body,
   body,
   [data-theme] *,
   .dp-card,
-  .dp-card-interactive:hover {
+  .dp-card-interactive:hover,
+  button:active {
     transition-duration: 0.01ms !important;
     transform: none !important;
   }
