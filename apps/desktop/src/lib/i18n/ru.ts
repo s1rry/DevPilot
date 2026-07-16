@@ -69,7 +69,6 @@ export const ru: Dictionary = {
   "scan.topLevelDirs": "Папок верхнего уровня: {count}",
   "scan.git": "Git",
   "scan.topContributors": "Топ контрибьюторов",
-  "scan.commitsCount": "Коммитов: {count}",
 
   // AI Chat view
   "chat.changeProject": "Сменить проект",
@@ -111,7 +110,6 @@ export const ru: Dictionary = {
   "insights.cyclicDependencies": "Циклические зависимости",
   "insights.deadCode": "Мёртвый код",
   "insights.duplication": "Дублирование",
-  "insights.duplicationSummary": "копий: {copies} · строк: {lines}",
   "insights.emptyHint":
     "Выберите проект и запустите анализ, чтобы найти циклические зависимости, мёртвый код и дублирование — или воспользуйтесь поиском по коду.",
 

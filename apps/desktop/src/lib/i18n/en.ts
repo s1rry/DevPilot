@@ -70,7 +70,6 @@ export const en = {
   "scan.topLevelDirs": "Top-level directories: {count}",
   "scan.git": "Git",
   "scan.topContributors": "Top contributors",
-  "scan.commitsCount": "Commits: {count}",
 
   // AI Chat view
   "chat.changeProject": "Change project",
@@ -112,7 +111,6 @@ export const en = {
   "insights.cyclicDependencies": "Cyclic dependencies",
   "insights.deadCode": "Dead code",
   "insights.duplication": "Duplication",
-  "insights.duplicationSummary": "{copies} copies · {lines} lines",
   "insights.emptyHint":
     "Choose a project and run Analyze to find cyclic dependencies, dead code and duplication — or search to locate code.",
 

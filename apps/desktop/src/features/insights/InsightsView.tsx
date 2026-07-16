@@ -5,7 +5,7 @@ import type { SearchHit } from "@/lib/ipc/intel";
 import { useInsightsStore } from "@/features/insights/store";
 import { useChatStore } from "@/features/ai-chat/store";
 import { useNavigationStore } from "@/lib/store/navigation";
-import { useT } from "@/lib/store/i18n";
+import { useT, useTn } from "@/lib/store/i18n";
 
 /** A titled section with a leading icon and a count badge. */
 function Section({
@@ -52,6 +52,7 @@ export function InsightsView() {
   const setQuery = useInsightsStore((state) => state.setQuery);
   const search = useInsightsStore((state) => state.search);
   const t = useT();
+  const tn = useTn();
 
   const explain = (hit: SearchHit) => {
     if (!projectPath) {
@@ -174,10 +175,7 @@ export function InsightsView() {
               {report.duplication.map((group, index) => (
                 <li key={index} className="flex flex-col gap-0.5">
                   <span className="text-xs text-muted">
-                    {t("insights.duplicationSummary", {
-                      copies: group.occurrences.length,
-                      lines: group.line_count,
-                    })}
+                    {tn("copies", group.occurrences.length)} · {tn("lines", group.line_count)}
                   </span>
                   {group.occurrences.map((occurrence, occurrenceIndex) => (
                     <span key={occurrenceIndex} className="truncate text-xs text-fg">
