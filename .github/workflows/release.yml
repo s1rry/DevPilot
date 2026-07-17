@@ -27,10 +27,18 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - name: macOS (universal)
+          # Build each macOS arch natively rather than cross-compiling a
+          # universal binary: git2/libgit2 links system OpenSSL, which only
+          # exists for the runner's own arch, so a universal build fails to
+          # find OpenSSL for the other slice. Two native runners avoid that.
+          - name: macOS (Apple Silicon)
             os: macos-latest
-            args: "--target universal-apple-darwin"
-            rust-targets: "aarch64-apple-darwin,x86_64-apple-darwin"
+            args: "--target aarch64-apple-darwin"
+            rust-targets: "aarch64-apple-darwin"
+          - name: macOS (Intel)
+            os: macos-13
+            args: "--target x86_64-apple-darwin"
+            rust-targets: "x86_64-apple-darwin"
           - name: Linux
             os: ubuntu-22.04
             args: ""
