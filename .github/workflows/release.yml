@@ -81,6 +81,11 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Updater signing key: signs each bundle and the latest.json manifest
+          # so the app only installs authentic updates. Required for the
+          # updater; the public key lives in tauri.conf.json.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
           # Optional macOS code signing + notarization. Builds stay unsigned
           # until these repository secrets are set; then tauri-action signs and
           # notarizes automatically, removing the Gatekeeper warning. Needs an
@@ -98,4 +103,5 @@ jobs:
           releaseBody: "Установщики DevPilot. Скачайте файл для своей ОС ниже. См. README для инструкций."
           releaseDraft: true
           prerelease: false
+          includeUpdaterJson: true
           args: ${{ matrix.platform.args }}

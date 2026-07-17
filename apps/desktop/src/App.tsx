@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { ContentArea } from "@/shared/ui/ContentArea";
 import { ResizeHandle } from "@/shared/ui/ResizeHandle";
@@ -8,6 +8,8 @@ import { TopBar } from "@/shared/ui/TopBar";
 import { useMediaQuery } from "@/shared/hooks/useMediaQuery";
 import { useResizablePanel } from "@/shared/hooks/useResizablePanel";
 import { useNavigationStore } from "@/lib/store/navigation";
+import { useT } from "@/lib/store/i18n";
+import { checkForUpdates } from "@/lib/updater";
 
 /** Below this window width the sidebar collapses to an icon rail. */
 const NARROW_QUERY = "(max-width: 900px)";
@@ -23,6 +25,7 @@ export default function App() {
   const collapsed = useNavigationStore((state) => state.sidebarCollapsed);
   const setSidebarCollapsed = useNavigationStore((state) => state.setSidebarCollapsed);
   const isNarrow = useMediaQuery(NARROW_QUERY);
+  const t = useT();
 
   const { width, isDragging, handleProps } = useResizablePanel({
     initialWidth: 240,
@@ -34,6 +37,17 @@ export default function App() {
   useEffect(() => {
     setSidebarCollapsed(isNarrow);
   }, [isNarrow, setSidebarCollapsed]);
+
+  // Check for a newer signed release once on startup. No-op in the browser
+  // preview and best-effort otherwise, so it never blocks the UI.
+  const updateChecked = useRef(false);
+  useEffect(() => {
+    if (updateChecked.current) {
+      return;
+    }
+    updateChecked.current = true;
+    void checkForUpdates(t);
+  }, [t]);
 
   return (
     <div className="flex h-full flex-col bg-canvas text-fg">

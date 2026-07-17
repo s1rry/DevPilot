@@ -132,6 +132,12 @@ export const en = {
   // Status bar
   "status.noRepository": "No repository",
   "status.ready": "Ready",
+
+  // Auto-update
+  "updater.title": "Update",
+  "updater.available": "Version {version} is available. Install now?",
+  "updater.install": "Install",
+  "updater.later": "Later",
 } as const;
 
 /** The set of valid translation keys, derived from the reference language. */

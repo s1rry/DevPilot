@@ -3,5 +3,10 @@
   "identifier": "default",
   "description": "Baseline capability for the main window. Extend explicitly per feature; never grant broad filesystem or shell access here.",
   "windows": ["main"],
-  "permissions": ["core:default", "dialog:allow-open"]
+  "permissions": [
+    "core:default",
+    "dialog:allow-open",
+    "updater:default",
+    "process:allow-restart"
+  ]
 }

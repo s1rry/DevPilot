@@ -131,4 +131,10 @@ export const ru: Dictionary = {
   // Status bar
   "status.noRepository": "Нет репозитория",
   "status.ready": "Готово",
+
+  // Auto-update
+  "updater.title": "Обновление",
+  "updater.available": "Доступна версия {version}. Установить сейчас?",
+  "updater.install": "Установить",
+  "updater.later": "Позже",
 };
