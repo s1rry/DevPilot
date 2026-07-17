@@ -27,18 +27,14 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          # Build each macOS arch natively rather than cross-compiling a
-          # universal binary: git2/libgit2 links system OpenSSL, which only
-          # exists for the runner's own arch, so a universal build fails to
-          # find OpenSSL for the other slice. Two native runners avoid that.
-          - name: macOS (Apple Silicon)
+          # One universal macOS binary (aarch64 + x86_64) built on Apple
+          # Silicon. Works because devpilot-git vendors OpenSSL on macOS, so the
+          # x86_64 slice no longer needs a system OpenSSL for its arch. Avoids
+          # the retiring macos-13 Intel runner entirely.
+          - name: macOS (universal)
             os: macos-latest
-            args: "--target aarch64-apple-darwin"
-            rust-targets: "aarch64-apple-darwin"
-          - name: macOS (Intel)
-            os: macos-13
-            args: "--target x86_64-apple-darwin"
-            rust-targets: "x86_64-apple-darwin"
+            args: "--target universal-apple-darwin"
+            rust-targets: "aarch64-apple-darwin,x86_64-apple-darwin"
           - name: Linux
             os: ubuntu-22.04
             args: ""

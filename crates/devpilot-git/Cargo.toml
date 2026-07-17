@@ -13,5 +13,13 @@ async-trait = { workspace = true }
 git2 = { workspace = true }
 tokio = { workspace = true }
 
+# On macOS, git2/libgit2 links OpenSSL for HTTPS. The system OpenSSL only
+# exists for the host arch, so a universal (aarch64 + x86_64) build cannot find
+# it for the other slice. Vendoring builds OpenSSL from source for each target,
+# which makes the universal release build work. Other platforms keep their
+# existing behaviour (Linux system OpenSSL, Windows WinHTTP).
+[target.'cfg(target_os = "macos")'.dependencies]
+openssl-sys = { version = "0.9", features = ["vendored"] }
+
 [dev-dependencies]
 tempfile = { workspace = true }
