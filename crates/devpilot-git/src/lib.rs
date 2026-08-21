@@ -72,15 +72,28 @@ fn open_local(path: &Path) -> Result<git2::Repository, GitError> {
 
 impl Git2Reader {
     /// Resolves the destination directory for cloning `url`.
+    ///
+    /// The folder name is derived from the last path segment of `url` and then
+    /// sanitized: only `[A-Za-z0-9._-]` survive, and names that would escape
+    /// `clone_base` (`.`, `..`, or empty) fall back to `"repository"`. This
+    /// keeps a hostile URL (e.g. one ending in `/../`) from writing outside the
+    /// clone base.
     fn clone_destination(&self, url: &str) -> PathBuf {
-        let name = url
+        let raw = url
             .trim_end_matches('/')
             .rsplit('/')
             .next()
             .unwrap_or("repository")
             .trim_end_matches(".git");
-        self.clone_base
-            .join(if name.is_empty() { "repository" } else { name })
+        let sanitized: String = raw
+            .chars()
+            .filter(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-'))
+            .collect();
+        let name = match sanitized.as_str() {
+            "" | "." | ".." => "repository",
+            other => other,
+        };
+        self.clone_base.join(name)
     }
 }
 
@@ -213,5 +226,48 @@ fn file_node(path: PathBuf, size_bytes: u64) -> FileNode {
         path,
         size_bytes,
         language,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn dest(url: &str) -> PathBuf {
+        Git2Reader::new("/base").clone_destination(url)
+    }
+
+    #[test]
+    fn derives_name_from_last_segment() {
+        assert_eq!(
+            dest("https://github.com/foo/bar.git"),
+            PathBuf::from("/base/bar")
+        );
+        assert_eq!(
+            dest("https://github.com/foo/bar/"),
+            PathBuf::from("/base/bar")
+        );
+    }
+
+    #[test]
+    fn rejects_path_traversal() {
+        // A trailing `/../` must not escape the clone base.
+        assert_eq!(
+            dest("https://evil/foo/../"),
+            PathBuf::from("/base/repository")
+        );
+        assert_eq!(dest("https://evil/.."), PathBuf::from("/base/repository"));
+        assert_eq!(dest("https://evil/."), PathBuf::from("/base/repository"));
+    }
+
+    #[test]
+    fn strips_unsafe_characters() {
+        assert_eq!(dest("https://evil/a b:c*d"), PathBuf::from("/base/abcd"));
+    }
+
+    #[test]
+    fn all_unsafe_segment_falls_back_to_repository() {
+        // Every character is stripped, leaving an empty name.
+        assert_eq!(dest("https://evil/@@@"), PathBuf::from("/base/repository"));
     }
 }
